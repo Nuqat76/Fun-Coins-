@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>TikTok Coins Dubai – </title>
+  <title>TikTok Coins – /title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * {
@@ -165,12 +165,6 @@
       transform: translateY(1px);
     }
 
-    .transfer-btn:disabled {
-      opacity: 0.6;
-      box-shadow: none;
-      cursor: default;
-    }
-
     .status-box {
       margin-top: 16px;
       font-size: 14px;
@@ -227,6 +221,7 @@
       margin: 0 auto 8px;
       font-size: 22px;
       color: #16a34a;
+      cursor: pointer;
     }
 
     .modal-title {
@@ -273,7 +268,7 @@
         <span class="balance-coin-icon"></span>
       </div>
       <div class="hint-text">
-       Echtes Guthaben in Euro 
+        TikTok Coins.
       </div>
     </div>
   </header>
@@ -347,12 +342,12 @@
   <!-- MODAL / POPUP -->
   <div id="successModal" class="modal-overlay">
     <div class="modal">
-      <div class="modal-icon">✔</div>
+      <div id="modalIcon" class="modal-icon">✔</div>
       <div class="modal-title">Transfer abgeschlossen</div>
       <div id="modalText" class="modal-text">
         Coins wurden erfolgreich versendet.
       </div>
-      <button id="modalCloseBtn" class="modal-button">OK</button>
+      <button id="modalCloseBtn" class="modal-button">Weiter</button>
     </div>
   </div>
 
@@ -370,6 +365,7 @@
     const successModal = document.getElementById("successModal");
     const modalText = document.getElementById("modalText");
     const modalCloseBtn = document.getElementById("modalCloseBtn");
+    const modalIcon = document.getElementById("modalIcon");
 
     function updateBalance() {
       balanceDisplay.textContent = balance.toLocaleString("de-DE");
@@ -403,22 +399,23 @@
       successModal.style.display = "flex";
     }
 
-    modalCloseBtn.addEventListener("click", () => {
+    // Beim Klick auf grünen Haken oder Button → externe Seite öffnen (z.B. TikTok)
+    function goToExternal() {
       successModal.style.display = "none";
-    });
+      window.open("https://www.tiktok.com", "_blank");
+    }
 
-    successModal.addEventListener("click", (e) => {
-      if (e.target === successModal) {
-        successModal.style.display = "none";
-      }
-    });
+    modalCloseBtn.addEventListener("click", goToExternal);
+    modalIcon.addEventListener("click", goToExternal);
 
     // Auswahl der Coins
     coinsGrid.addEventListener("click", (e) => {
       const box = e.target.closest(".coin-box");
       if (!box) return;
 
-      document.querySelectorAll(".coin-box").forEach((b) => b.classList.remove("selected"));
+      document.querySelectorAll(".coin-box").forEach((b) =>
+        b.classList.remove("selected")
+      );
       box.classList.add("selected");
 
       const value = box.dataset.coins;
@@ -456,15 +453,13 @@
         return;
       }
 
-      // Guthaben sofort reduzieren (realistischer)
+      // Guthaben sofort reduzieren
       balance -= selectedCoins;
       updateBalance();
 
-      // Countdown starten
+      // Countdown 4:59 Minuten
       clearCountdown();
       let time = 4 * 60 + 59; // 4:59
-
-      transferBtn.disabled = true;
 
       showStatus(
         `⏳ Transfer vorbereitet: <span class="status-strong">${selectedCoins.toLocaleString(
@@ -473,6 +468,8 @@
           `Versand in <span class="status-strong">${formatTime(time)}</span>.`,
         ""
       );
+
+      // Button NICHT deaktivieren → man kann weiter senden, während Countdown läuft
 
       countdownInterval = setInterval(() => {
         time--;
@@ -485,7 +482,6 @@
               )} Coins wurden an <span class="status-strong">@${username}</span> gesendet (Demo).`,
             "success"
           );
-          transferBtn.disabled = false;
           showModal(username, selectedCoins);
           return;
         }
@@ -504,7 +500,10 @@
 
     // Startanzeige
     updateBalance();
-    showStatus("Bereit. Wähle ein Coin-Paket und gib deinen TikTok Namen ein.", "");
+    showStatus(
+      "Bereit. Wähle ein Coin-Paket und gib deinen TikTok Namen ein.",
+      ""
+    );
   </script>
 </body>
 </html>
