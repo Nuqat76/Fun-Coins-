@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Spaß-Coins Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            text-align: center;
+            padding-top: 50px;
+        }
+        .box {
+            background: #222;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            margin: auto;
+            border-radius: 15px;
+            box-shadow: 0 0 15px #ffcc00;
+        }
+        input {
+            width: 90%;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+        }
+        button {
+            width: 90%;
+            padding: 10px;
+            margin-top: 20px;
+            font-size: 18px;
+            background: #ffcc00;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #ffaa00;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🎉 Spaß-Coins Generator 🎉</h1>
+
+    <div class="box">
+        <p>Was möchten Sie heute einsetzen?</p>
+
+        <input type="text" placeholder="TikTok Benutzername" id="name">
+        <input type="number" placeholder="Coins auswählen" id="coins">
+
+        <button onclick="fake()">Generieren</button>
+
+        <p id="result" style="margin-top:20px; font-size:18px;"></p>
+    </div>
+
+    <script>
+        function fake() {
+            let name = document.getElementById("name").value;
+            let coins = document.getElementById("coins").value;
+
+            if (name === "" || coins === "") {
+                document.getElementById("result").innerHTML = "Bitte alles ausfüllen!";
+                return;
+            }
+
+            document.getElementById("result").innerHTML =
+                "✔️ " + coins + " Coins wurden erfolgreich für @" + name + " vorbereitet! (Nur Spaß 😜)";
+        }
+    </script>
+
+</body>
+</html>
