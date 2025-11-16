@@ -2,507 +2,217 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>TikTok Coins money – Fun Demo</title>
+  <title>TikTok Coins money – </title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0f0f10;
-      color: #f9fafb;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: #ffffff; /* weißer Hintergrund */
+      color: #111;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
     header {
-      padding: 14px 20px;
-      border-bottom: 1px solid #27272f;
-      background: radial-gradient(circle at top left, #ff3355 0, #111827 45%);
+      padding: 20px 16px;
+      border-bottom: 1px solid #e5e7eb;
+      background: #ffffff;
     }
 
     .header-inner {
-      max-width: 960px;
+      max-width: 480px;
       margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .brand {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .brand-title {
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .brand-sub {
-      font-size: 11px;
-      color: #e5e7eb;
-      opacity: 0.8;
-    }
-
-    .balance-box {
-      text-align: right;
-      font-size: 13px;
+      text-align: center;
     }
 
     .balance-label {
-      color: #d4d4d8;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      font-size: 13px;
+      font-weight: 500;
+      color: #777;
+      margin-bottom: 4px;
     }
 
     .balance-value {
-      font-size: 16px;
-      font-weight: 700;
-      color: #fde68a;
+      font-size: 26px;
+      font-weight: 800;
+      color: #ff004f;
     }
 
     main {
-      flex: 1;
-      padding: 18px 12px 30px;
-    }
-
-    .main-inner {
-      max-width: 960px;
+      max-width: 480px;
       margin: 0 auto;
-      display: grid;
-      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.3fr);
-      gap: 18px;
-    }
-
-    /* Linke Karte – Recharge */
-    .card {
-      background: #111827;
-      border-radius: 18px;
-      padding: 18px 18px 16px;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-      border: 1px solid #1f2937;
-    }
-
-    .card-header {
-      margin-bottom: 10px;
-    }
-
-    .card-title {
-      font-size: 17px;
-      font-weight: 600;
-    }
-
-    .card-sub {
-      font-size: 12px;
-      color: #9ca3af;
-      margin-top: 4px;
-    }
-
-    .card-sub strong {
-      color: #f97316;
-    }
-
-    .form-row {
-      margin-top: 12px;
+      padding: 20px 14px 40px;
     }
 
     .label {
-      font-size: 12px;
-      color: #e5e7eb;
-      margin-bottom: 4px;
-      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #333;
     }
 
     .input {
       width: 100%;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid #27272f;
-      background: #020617;
-      color: #f9fafb;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
       font-size: 14px;
-      outline: none;
-    }
-
-    .input::placeholder {
-      color: #6b7280;
-    }
-
-    .input:focus {
-      border-color: #f97316;
-      box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.5);
+      margin-bottom: 18px;
     }
 
     .coins-grid {
-      margin-top: 16px;
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(3,1fr);
       gap: 10px;
+      margin-bottom: 18px;
     }
 
     .coin-box {
-      border-radius: 16px;
-      border: 1px solid #1f2937;
-      background: radial-gradient(circle at top left, #111827, #020617 60%);
-      padding: 10px 8px;
-      min-height: 76px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: left;
+      border: 1px solid #ddd;
+      background: #fafafa;
+      border-radius: 14px;
+      padding: 12px;
       cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .coin-main {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 4px;
-    }
-
-    .coin-amount {
-      font-size: 15px;
-      font-weight: 600;
-    }
-
-    .coin-tag {
-      font-size: 11px;
-      color: #a5b4fc;
-      border-radius: 999px;
-      padding: 2px 6px;
-      border: 1px solid #4b5563;
-    }
-
-    .coin-price {
-      font-size: 11px;
-      color: #9ca3af;
+      transition: .15s;
     }
 
     .coin-box.selected {
-      border-color: #fb7185;
-      box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.6);
-      background: radial-gradient(circle at top left, #1f2937, #111827 60%);
+      border-color: #ff2b61;
+      background: #ffe7ef;
+      box-shadow: 0 0 0 2px #ff2b61;
     }
 
-    .coin-box.custom {
-      border-style: dashed;
-      border-color: #6b7280;
-      background: #020617;
-      text-align: center;
-      align-items: center;
+    .coin-amount {
+      font-size: 16px;
+      font-weight: 600;
+      color: #111;
     }
 
-    .coin-box.custom .coin-main {
-      justify-content: center;
+    .coin-price {
+      font-size: 12px;
+      color: #666;
+      margin-top: 3px;
     }
 
-    .coin-box.custom .coin-price {
-      font-size: 11px;
-      color: #d4d4d8;
+    .transfer-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ff0050, #ff2b61);
+      color: white;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(255,0,80,0.45);
+      margin-top: 6px;
+    }
+
+    .transfer-btn:active {
+      transform: translateY(1px);
     }
 
     .status-box {
-      margin-top: 14px;
-      font-size: 13px;
-      color: #e5e7eb;
+      margin-top: 16px;
+      font-size: 14px;
+      color: #333;
       min-height: 40px;
     }
 
-    .status-strong {
-      color: #f97316;
-      font-weight: 600;
-    }
+    .status-strong { color: #ff004f; font-weight: 700; }
+    .status-green { color: #16a34a; font-weight: 700; }
 
-    .status-done {
-      color: #4ade80;
-      font-weight: 600;
-    }
-
-    .send-btn {
-      margin-top: 10px;
-      width: 100%;
-      border-radius: 999px;
-      border: none;
-      padding: 12px;
-      font-size: 15px;
-      font-weight: 600;
-      background: linear-gradient(135deg, #f97316, #fb7185);
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 12px 30px rgba(248, 113, 113, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .send-btn:active {
-      transform: translateY(1px);
-      box-shadow: 0 6px 16px rgba(248, 113, 113, 0.6);
-    }
-
-    .send-btn[disabled] {
-      opacity: 0.7;
-      cursor: default;
-      box-shadow: none;
-    }
-
-    /* Rechte Seite – Info / Angebote */
-    .side-card {
-      background: #020617;
-      border-radius: 18px;
-      padding: 14px 14px 12px;
-      border: 1px solid #111827;
-      box-shadow: 0 14px 30px rgba(0,0,0,0.45);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .side-block {
-      background: #0b1120;
-      border-radius: 14px;
-      padding: 10px 10px 9px;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .side-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      background: radial-gradient(circle at top left, #f97316, #fb7185);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-    }
-
-    .side-text-main {
-      font-size: 13px;
-      font-weight: 600;
-      color: #f9fafb;
-    }
-
-    .side-text-sub {
-      font-size: 11px;
-      color: #9ca3af;
-      margin-top: 2px;
-    }
-
-    .side-tag {
-      font-size: 10px;
-      color: #fecaca;
-      border-radius: 999px;
-      border: 1px solid #f97316;
-      padding: 2px 6px;
-      align-self: flex-start;
-      margin-left: auto;
-    }
-
-    .legal {
-      max-width: 960px;
-      margin: 8px auto 18px;
-      font-size: 11px;
-      color: #9ca3af;
-      text-align: center;
-      padding: 0 12px;
-    }
-
-    .legal span {
-      color: #f97316;
-      font-weight: 600;
-    }
-
-    @media (max-width: 800px) {
-      .main-inner {
-        grid-template-columns: minmax(0, 1fr);
-      }
-      .side-card {
-        order: -1;
-      }
-    }
-
-    @media (max-width: 480px) {
-      header {
-        padding: 10px 12px;
-      }
-      main {
-        padding: 12px 8px 22px;
-      }
-      .card, .side-card {
-        border-radius: 14px;
-      }
-    }
   </style>
 </head>
 <body>
+
+  <!-- OBERE BALANCE -->
   <header>
     <div class="header-inner">
-      <div class="brand">
-        <div class="brand-title">TikTok Coins money</div>
-        <div class="brand-sub">Fun-Demo • keine echten Käufe oder Coins</div>
-      </div>
-      <div class="balance-box">
-        <div class="balance-label">Coins-Guthaben (Demo)</div>
-        <div class="balance-value">8.000.000</div>
-      </div>
+      <div class="balance-label">Coins</div>
+      <div id="balance" class="balance-value">8,000,000</div>
     </div>
   </header>
 
   <main>
-    <div class="main-inner">
-      <!-- Linke Seite: eigentliche Coins-Seite -->
-      <section class="card">
-        <div class="card-header">
-          <div class="card-title">Recharge</div>
-          <div class="card-sub">
-            Spare bis zu <strong>25&nbsp;%</strong> Service-Fee in dieser
-            Fun-Demo-Ansicht.
-          </div>
-        </div>
+    <!-- BENUTZERNAME -->
+    <label class="label">TikTok Benutzername</label>
+    <input
+      id="username"
+      class="input"
+      placeholder="@benutzername"
+      type="text"
+    />
 
-        <div class="form-row">
-          <label class="label" for="username">TikTok Benutzername</label>
-          <input
-            id="username"
-            class="input"
-            type="text"
-            placeholder="@dein_benutzername"
-          />
-        </div>
+    <!-- COINS GRID -->
+    <div class="coins-grid" id="coinsGrid">
+      <div class="coin-box" data-coins="30">
+        <div class="coin-amount">30 Coins</div>
+        <div class="coin-price">$0.31</div>
+      </div>
 
-        <div class="coins-grid" id="coinsGrid">
-          <div class="coin-box" data-coins="30">
-            <div class="coin-main">
-              <div class="coin-amount">30 Coins</div>
-              <div class="coin-tag">Basic</div>
-            </div>
-            <div class="coin-price">$0.31</div>
-          </div>
+      <div class="coin-box" data-coins="350">
+        <div class="coin-amount">350 Coins</div>
+        <div class="coin-price">$3.65</div>
+      </div>
 
-          <div class="coin-box" data-coins="350">
-            <div class="coin-main">
-              <div class="coin-amount">350 Coins</div>
-              <div class="coin-tag">Popular</div>
-            </div>
-            <div class="coin-price">$3.65</div>
-          </div>
+      <div class="coin-box" data-coins="700">
+        <div class="coin-amount">700 Coins</div>
+        <div class="coin-price">$7.25</div>
+      </div>
 
-          <div class="coin-box" data-coins="700">
-            <div class="coin-main">
-              <div class="coin-amount">700 Coins</div>
-              <div class="coin-tag">Value</div>
-            </div>
-            <div class="coin-price">$7.25</div>
-          </div>
+      <div class="coin-box" data-coins="1400">
+        <div class="coin-amount">1400 Coins</div>
+        <div class="coin-price">$14.49</div>
+      </div>
 
-          <div class="coin-box" data-coins="1400">
-            <div class="coin-main">
-              <div class="coin-amount">1400 Coins</div>
-              <div class="coin-tag">Creator</div>
-            </div>
-            <div class="coin-price">$14.49</div>
-          </div>
+      <div class="coin-box" data-coins="3500">
+        <div class="coin-amount">3500 Coins</div>
+        <div class="coin-price">$36.20</div>
+      </div>
 
-          <div class="coin-box" data-coins="3500">
-            <div class="coin-main">
-              <div class="coin-amount">3500 Coins</div>
-              <div class="coin-tag">Pro Pack</div>
-            </div>
-            <div class="coin-price">$36.20</div>
-          </div>
-
-          <div class="coin-box custom" data-coins="custom">
-            <div class="coin-main">
-              <div class="coin-amount">Custom</div>
-            </div>
-            <div class="coin-price">eigene Menge festlegen</div>
-          </div>
-        </div>
-
-        <div id="statusBox" class="status-box"></div>
-
-        <button id="sendBtn" class="send-btn">
-          <span>Transfer starten</span>
-          <span>▶</span>
-        </button>
-      </section>
-
-      <!-- Rechte Seite: Info / Banner -->
-      <aside class="side-card">
-        <div class="side-block">
-          <div class="side-icon">👏</div>
-          <div>
-            <div class="side-text-main">Invite &amp; Get Rewards</div>
-            <div class="side-text-sub">
-              Nutze diese Demo-Seite für Videos oder Tests – ohne echte Zahlungen.
-            </div>
-          </div>
-          <div class="side-tag">Demo-Feature</div>
-        </div>
-
-        <div class="side-block">
-          <div class="side-icon">📲</div>
-          <div>
-            <div class="side-text-main">Zum Homescreen hinzufügen</div>
-            <div class="side-text-sub">
-              Speichere diese Fun-Coins Seite wie eine App auf deinem Handy.
-            </div>
-          </div>
-        </div>
-
-        <div class="side-block">
-          <div class="side-icon">💡</div>
-          <div>
-            <div class="side-text-main">Nur eine Fun-Simulation</div>
-            <div class="side-text-sub">
-              Diese Seite steht in keinem Zusammenhang mit TikTok und verschickt
-              keine echten Coins.
-            </div>
-          </div>
-        </div>
-      </aside>
+      <div class="coin-box" data-coins="custom">
+        <div class="coin-amount">Custom</div>
+        <div class="coin-price">Eigene Anzahl</div>
+      </div>
     </div>
+
+    <!-- TRANSFER BUTTON -->
+    <button class="transfer-btn" id="transferBtn">Transfer starten</button>
+
+    <!-- STATUS / COUNTDOWN -->
+    <div id="statusBox" class="status-box"></div>
   </main>
 
-  <div class="legal">
-    <span>Hinweis:</span> Dies ist eine inoffizielle Fun-Demo-Seite. Es werden
-    keine echten Coins, Käufe oder TikTok-Funktionen ausgeführt.
-  </div>
-
   <script>
+    let balance = 8000000; // START-BALANCE
+    const balanceEl = document.getElementById("balance");
+
     const coinBoxes = document.querySelectorAll(".coin-box");
-    const sendBtn = document.getElementById("sendBtn");
     const statusBox = document.getElementById("statusBox");
     const usernameInput = document.getElementById("username");
+    const transferBtn = document.getElementById("transferBtn");
 
     let selectedCoins = null;
     let countdownInterval = null;
+
+    function updateBalance() {
+      balanceEl.textContent = balance.toLocaleString("de-DE");
+    }
 
     coinBoxes.forEach((box) => {
       box.addEventListener("click", () => {
         coinBoxes.forEach((b) => b.classList.remove("selected"));
         box.classList.add("selected");
 
-        const coins = box.getAttribute("data-coins");
+        const coins = box.dataset.coins;
 
         if (coins === "custom") {
-          const entered = prompt("Bitte Wunschanzahl an Coins eingeben:");
-          if (entered && !isNaN(entered) && Number(entered) > 0) {
-            selectedCoins = Number(entered);
-            box.querySelector(".coin-amount").textContent = entered + " Coins";
+          const custom = prompt("Gib deine gewünschte Coin-Anzahl ein:");
+          if (custom && !isNaN(custom) && Number(custom) > 0) {
+            selectedCoins = Number(custom);
+            box.querySelector(".coin-amount").textContent = custom + " Coins";
           } else {
             selectedCoins = null;
             box.classList.remove("selected");
@@ -513,70 +223,62 @@
       });
     });
 
-    function formatTime(seconds) {
-      const m = Math.floor(seconds / 60);
-      const s = seconds % 60;
-      return m + ":" + String(s).padStart(2, "0");
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${m}:${String(s).padStart(2,"0")}`;
     }
 
-    sendBtn.addEventListener("click", () => {
+    transferBtn.addEventListener("click", () => {
       const username = usernameInput.value.trim();
 
       if (!username) {
-        alert("Bitte zuerst deinen TikTok-Benutzernamen eingeben.");
+        alert("Bitte TikTok Benutzernamen eingeben.");
         return;
       }
 
       if (!selectedCoins) {
-        alert("Bitte zuerst ein Coins-Paket auswählen.");
+        alert("Bitte Coins auswählen.");
         return;
       }
 
-      if (countdownInterval) {
-        clearInterval(countdownInterval);
+      if (balance < selectedCoins) {
+        alert("Nicht genug Coins im Guthaben!");
+        return;
       }
 
-      // 4:59 = 299 Sekunden
-      let remaining = 4 * 60 + 59;
+      // Balance direkt reduzieren (wirkt realistisch!)
+      balance -= selectedCoins;
+      updateBalance();
 
-      sendBtn.disabled = true;
+      // Countdown starten
+      let time = 4*60 + 59;
 
       statusBox.innerHTML =
-        "⏳ Transfer vorbereitet für <span class='status-strong'>" +
-        selectedCoins +
-        " Coins</span> an <span class='status-strong'>" +
-        username +
-        "</span>.<br>Versand startet in <span class='status-strong'>" +
-        formatTime(remaining) +
-        "</span> (Demo).";
+        `⏳ Transfer vorbereitet: <span class="status-strong">${selectedCoins}</span> Coins an <span class="status-strong">${username}</span>. ` +
+        `<br>Versand in <span class="status-strong">${formatTime(time)}</span>.`;
+
+      clearInterval(countdownInterval);
 
       countdownInterval = setInterval(() => {
-        remaining--;
+        time--;
 
-        if (remaining <= 0) {
+        if (time <= 0) {
           clearInterval(countdownInterval);
           statusBox.innerHTML =
-            "✅ <span class='status-done'>Demo abgeschlossen.</span> Die " +
-            selectedCoins +
-            " Coins wurden in dieser Fun-Simulation an " +
-            "<span class='status-strong'>" +
-            username +
-            "</span> gesendet (nicht echt).";
-          sendBtn.disabled = false;
+            `✅ <span class="status-green">Transfer abgeschlossen!</span><br>` +
+            `${selectedCoins} Coins wurden an <span class="status-strong">${username}</span> gesendet (DEMO).`;
           return;
         }
 
         statusBox.innerHTML =
-          "⏳ Transfer läuft… <span class='status-strong'>" +
-          formatTime(remaining) +
-          "</span> verbleiben, bis die " +
-          selectedCoins +
-          " Coins (Demo) an " +
-          "<span class='status-strong'>" +
-          username +
-          "</span> gesendet sind.";
+          `⏳ Versand in <span class="status-strong">${formatTime(time)}</span>…<br>` +
+          `${selectedCoins} Coins gehen an <span class="status-strong">${username}</span>.`;
       }, 1000);
     });
+
+    updateBalance();
   </script>
+
 </body>
 </html>
