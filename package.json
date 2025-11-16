@@ -1,0 +1,12 @@
+{
+  "name": "fun-coins",
+  "version": "1.0.0",
+  "description": "Fun Coins Demo – nur zum Spaß",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.0"
+  }
+}
