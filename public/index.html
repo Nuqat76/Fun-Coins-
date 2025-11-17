@@ -45,6 +45,8 @@
       width: 32px;
       height: 32px;
       object-fit: contain;
+      border-radius: 8px;
+      background: #000;
     }
 
     .title {
@@ -81,4 +83,561 @@
       height: 18px;
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, #ffd54f, #f4a629);
-      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
+    }
+
+    /* INFO ---------------------------------------------------------------- */
+    .info-box {
+      background: #f7f7f7;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 16px;
+    }
+
+    .info-box strong {
+      font-weight: 600;
+    }
+
+    /* CARD / FORM --------------------------------------------------------- */
+    .card {
+      background: #fafafa;
+      border-radius: 16px;
+      padding: 14px 14px 18px;
+      box-shadow: 0 0 0 1px #eee;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .section-sub {
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 12px;
+    }
+
+    .field-label {
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+
+    .input:focus {
+      border-color: #ff0050;
+      box-shadow: 0 0 0 2px rgba(255, 0, 80, 0.15);
+    }
+
+    /* COINS GRID ---------------------------------------------------------- */
+    .coins-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .coin-card {
+      border-radius: 12px;
+      border: 1px solid #e2e2e2;
+      padding: 8px 6px;
+      text-align: center;
+      font-size: 13px;
+      cursor: pointer;
+      background: #ffffff;
+      transition: border 0.18s, box-shadow 0.18s, transform 0.08s;
+    }
+
+    .coin-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    }
+
+    .coin-card.selected {
+      border-color: #ff0050;
+      box-shadow: 0 0 0 1px rgba(255, 0, 80, 0.5);
+    }
+
+    .coin-amount {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .coin-price {
+      font-size: 11px;
+      color: #777;
+    }
+
+    /* SPECIAL OFFER / CARDS ---------------------------------------------- */
+    .special-offer {
+      margin-top: 18px;
+      border-top: 1px solid #eee;
+      padding-top: 10px;
+      font-size: 11px;
+      color: #666;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cards-row {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      font-size: 11px;
+    }
+
+    .card-chip {
+      width: 20px;
+      height: 14px;
+      border-radius: 3px;
+      background: #e4e4e4;
+      display: inline-block;
+    }
+
+    /* SEND BUTTON --------------------------------------------------------- */
+    .btn-send {
+      width: 100%;
+      margin-top: 16px;
+      padding: 11px 16px;
+      border-radius: 999px;
+      border: none;
+      font-weight: 600;
+      font-size: 15px;
+      color: #fff;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff0050, #ff4b72);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 10px rgba(255, 0, 80, 0.35);
+      transition: transform 0.08s, box-shadow 0.08s, opacity 0.2s;
+    }
+
+    .btn-send:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 6px rgba(255, 0, 80, 0.26);
+    }
+
+    .btn-send:disabled {
+      opacity: 0.6;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .btn-send span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    /* POPUP OVERLAY ------------------------------------------------------- */
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .popup-overlay.hidden {
+      display: none;
+    }
+
+    .popup {
+      width: 88%;
+      max-width: 340px;
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 20px 18px 18px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+      animation: popup-in 0.22s ease-out;
+    }
+
+    @keyframes popup-in {
+      from {
+        opacity: 0;
+        transform: translateY(6px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .popup-loader {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 4px solid #f0f0f0;
+      border-top-color: #ff0050;
+      margin: 0 auto 14px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .popup-check {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      margin: 0 auto 14px;
+      background: #16c47f;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 28px;
+      box-shadow: 0 0 0 6px rgba(22, 196, 127, 0.2);
+    }
+
+    .popup-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .popup-text {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 10px;
+    }
+
+    .popup-timer {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .popup-user {
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 4px;
+    }
+
+    .popup-payinfo {
+      font-size: 11px;
+      color: #888;
+    }
+
+    .popup-payinfo span {
+      font-weight: 600;
+      color: #16c47f;
+    }
+
+    /* FOOTER NOTE --------------------------------------------------------- */
+    .footer-note {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #aaa;
+      text-align: center;
+    }
+
+    /* RESPONSIVE ---------------------------------------------------------- */
+    @media (max-width: 360px) {
+      .coins-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- HEADER ----------------------------------------------------------- -->
+    <header class="header">
+      <div class="brand">
+        <!-- Logo-Datei "logo.png" in den gleichen Ordner legen -->
+        <img src="logo.png" alt="Logo" class="logo" />
+        <div>
+          <div class="title">TikTok Coins Versand</div>
+          <div class="subtitle">Herzlich willkommen auf TikTok Coins Versand</div>
+        </div>
+      </div>
+
+      <div class="balance-box">
+        <div class="balance-label">Coins</div>
+        <div class="balance-value">
+          <span id="balanceText">8,000,000</span>
+          <div class="coin-icon"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- INFO ------------------------------------------------------------- -->
+    <div class="info-box">
+      <strong>Hinweis:</strong> Fun-/Demo-Seite. Es werden keine echten TikTok-Coins
+      verschickt und es findet keine reale Zahlung statt.
+    </div>
+
+    <!-- FORM CARD -------------------------------------------------------- -->
+    <div class="card">
+      <div class="section-title">Benutzername</div>
+      <div class="section-sub">
+        Gib den TikTok-Nutzernamen ein, der Coins bekommen soll.
+      </div>
+
+      <label class="field-label" for="usernameInput">@ Benutzername</label>
+      <input
+        id="usernameInput"
+        type="text"
+        class="input"
+        placeholder="@username"
+      />
+
+      <div style="margin-top: 16px;">
+        <div class="section-title">Recharge</div>
+        <div class="section-sub">
+          Save around 25% with a lower third-party service fee.
+        </div>
+      </div>
+
+      <!-- COINS GRID ----------------------------------------------------- -->
+      <div class="coins-grid">
+        <div class="coin-card" data-coins="30" data-price="0.31">
+          <div class="coin-amount">
+            <div class="coin-icon"></div>
+            <span>30</span>
+          </div>
+          <div class="coin-price">$0.31</div>
+        </div>
+
+        <div class="coin-card" data-coins="350" data-price="3.65">
+          <div class="coin-amount">
+            <div class="coin-icon"></div>
+            <span>350</span>
+          </div>
+          <div class="coin-price">$3.65</div>
+        </div>
+
+        <div class="coin-card" data-coins="700" data-price="7.25">
+          <div class="coin-amount">
+            <div class="coin-icon"></div>
+            <span>700</span>
+          </div>
+          <div class="coin-price">$7.25</div>
+        </div>
+
+        <div class="coin-card" data-coins="1400" data-price="14.49">
+          <div class="coin-amount">
+            <div class="coin-icon"></div>
+            <span>1400</span>
+          </div>
+          <div class="coin-price">$14.49</div>
+        </div>
+
+        <div class="coin-card" data-coins="3500" data-price="36.20">
+          <div class="coin-amount">
+            <div class="coin-icon"></div>
+            <span>3500</span>
+          </div>
+          <div class="coin-price">$36.20</div>
+        </div>
+
+        <!-- „Custom“: 50.000 Coins -------------------------------------- -->
+        <div class="coin-card" data-coins="50000" data-price="260.62">
+          <div class="coin-amount">
+            <div class="coin-icon"></div>
+            <span>50,000</span>
+          </div>
+          <div class="coin-price">$260.62</div>
+        </div>
+      </div>
+
+      <!-- SPECIAL OFFER / KARTEN ---------------------------------------- -->
+      <div class="special-offer">
+        <div>Special offer</div>
+        <div class="cards-row">
+          <span>Demo cards:</span>
+          <span class="card-chip"></span>
+          <span class="card-chip"></span>
+          <span class="card-chip"></span>
+        </div>
+      </div>
+
+      <!-- SEND BUTTON ---------------------------------------------------- -->
+      <button id="sendButton" class="btn-send" onclick="sendCoins()">
+        <span class="dot"></span>
+        Coins senden
+      </button>
+    </div>
+
+    <div class="footer-note">
+      Fun-Projekt – nur zu Unterhaltungszwecken.
+    </div>
+  </div>
+
+  <!-- POPUP --------------------------------------------------------------- -->
+  <div id="paymentOverlay" class="popup-overlay hidden">
+    <div class="popup">
+      <div id="popupLoader" class="popup-loader"></div>
+      <div id="popupCheck" class="popup-check">✓</div>
+
+      <div id="popupTitle" class="popup-title">Processing your payment</div>
+      <div id="popupText" class="popup-text">
+        This could take few seconds
+      </div>
+
+      <div id="popupTimer" class="popup-timer">04:59</div>
+      <div id="popupUser" class="popup-user"></div>
+      <div id="popupPayInfo" class="popup-payinfo">
+        Demo-Zahlung – keine echten Karten.
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT -------------------------------------------------------------- -->
+  <script>
+    let balance = 8000000;
+    let selectedCoins = 0;
+    let countdownInterval = null;
+
+    const balanceText = document.getElementById("balanceText");
+    const coinsCards = document.querySelectorAll(".coin-card");
+    const overlay = document.getElementById("paymentOverlay");
+    const popupLoader = document.getElementById("popupLoader");
+    const popupCheck = document.getElementById("popupCheck");
+    const popupTitle = document.getElementById("popupTitle");
+    const popupText = document.getElementById("popupText");
+    const popupTimer = document.getElementById("popupTimer");
+    const popupUser = document.getElementById("popupUser");
+    const popupPayInfo = document.getElementById("popupPayInfo");
+    const sendButton = document.getElementById("sendButton");
+
+    function formatNumber(num) {
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function updateBalanceDisplay() {
+      balanceText.textContent = formatNumber(balance);
+    }
+
+    // Coins-Auswahl --------------------------------------------------------
+    coinsCards.forEach((card) => {
+      card.addEventListener("click", () => {
+        coinsCards.forEach((c) => c.classList.remove("selected"));
+        card.classList.add("selected");
+        selectedCoins = parseInt(card.getAttribute("data-coins"), 10);
+      });
+    });
+
+    // Coins senden ---------------------------------------------------------
+    function sendCoins() {
+      const usernameInput = document.getElementById("usernameInput");
+      const username = usernameInput.value.trim();
+
+      if (!username) {
+        alert("Bitte gib zuerst einen TikTok-Benutzernamen ein.");
+        return;
+      }
+
+      if (!selectedCoins || selectedCoins <= 0) {
+        alert("Bitte wähle zuerst ein Coins-Paket aus.");
+        return;
+      }
+
+      if (selectedCoins > balance) {
+        alert("Nicht genug Demo-Guthaben für dieses Paket.");
+        return;
+      }
+
+      // Guthaben abziehen (Demo)
+      balance -= selectedCoins;
+      updateBalanceDisplay();
+
+      // PopUp starten
+      startPaymentPopup(username, selectedCoins);
+    }
+
+    // Pop-Up & Countdown ---------------------------------------------------
+    function startPaymentPopup(username, coins) {
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+      }
+
+      // Ausgangszustand
+      popupLoader.style.display = "block";
+      popupCheck.style.display = "none";
+      popupTitle.textContent = "Processing your payment";
+      popupText.textContent = "This could take few seconds";
+      popupUser.textContent =
+        "Sending " + coins.toLocaleString("de-DE") + " coins to @" + username;
+      popupPayInfo.innerHTML = "Demo-Zahlung – keine echten Karten.";
+      popupTimer.textContent = "04:59";
+
+      overlay.classList.remove("hidden");
+      sendButton.disabled = true;
+
+      let time = 4 * 60 + 59; // 04:59 in Sekunden
+
+      countdownInterval = setInterval(() => {
+        const minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+        popupTimer.textContent =
+          (minutes < 10 ? "0" + minutes : minutes) +
+          ":" +
+          (seconds < 10 ? "0" + seconds : seconds);
+
+        time--;
+
+        if (time < 0) {
+          clearInterval(countdownInterval);
+          showSuccess(username, coins);
+        }
+      }, 1000);
+    }
+
+    function showSuccess(username, coins) {
+      popupLoader.style.display = "none";
+      popupCheck.style.display = "flex";
+      popupTitle.textContent = "Payment completed";
+      popupText.textContent = "";
+      popupTimer.textContent = "00:00";
+      popupUser.textContent =
+        coins.toLocaleString("de-DE") +
+        " Coins erfolgreich an @" +
+        username +
+        " gesendet.";
+      popupPayInfo.innerHTML =
+        "<span>Demo-Zahlung</span> mit Visa / Bankkarte bestätigt.";
+
+      // wenn du nach der Zahlung auf eine externe Seite willst, hier URL einsetzen:
+      // setTimeout(() => {
+      //   window.location.href = "https://DEINE-DEMO-URL.de";
+      // }, 2000);
+
+      // Nur Pop-up schließen und Button wieder aktivieren:
+      setTimeout(() => {
+        overlay.classList.add("hidden");
+        sendButton.disabled = false;
+      }, 2500);
+    }
+
+    // Start: Guthaben anzeigen
+    updateBalanceDisplay();
+  </script>
+</body>
+</html>
