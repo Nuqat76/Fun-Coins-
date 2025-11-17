@@ -183,31 +183,49 @@
       color: #777;
     }
 
-    /* SPECIAL OFFER / CARDS ---------------------------------------------- */
-    .special-offer {
+    /* ZAHLUNGSARTEN ------------------------------------------------------ */
+    .payment-row {
       margin-top: 18px;
       border-top: 1px solid #eee;
       padding-top: 10px;
       font-size: 11px;
       color: #666;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
 
-    .cards-row {
+    .payment-title {
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .payment-methods {
       display: flex;
-      gap: 4px;
       align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .pay-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 8px;
+      border-radius: 999px;
       font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
     }
 
-    .card-chip {
-      width: 20px;
-      height: 14px;
-      border-radius: 3px;
-      background: #e4e4e4;
-      display: inline-block;
+    .pay-paypal {
+      background: #0070ba;
+    }
+
+    .pay-card {
+      background: #444;
+    }
+
+    .pay-crypto {
+      background: #f7931a;
     }
 
     /* SEND BUTTON --------------------------------------------------------- */
@@ -235,12 +253,6 @@
       box-shadow: 0 2px 6px rgba(255, 0, 80, 0.26);
     }
 
-    .btn-send:disabled {
-      opacity: 0.6;
-      cursor: default;
-      box-shadow: none;
-    }
-
     .btn-send span.dot {
       width: 8px;
       height: 8px;
@@ -248,15 +260,16 @@
       background: #fff;
     }
 
-    /* POPUP OVERLAY ------------------------------------------------------- */
+    /* POPUP "Zahlung bestätigt" ------------------------------------------ */
     .popup-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.55);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 9999;
+      background: transparent;      /* kein dunkler Hintergrund */
+      pointer-events: none;         /* blockiert keine Klicks */
     }
 
     .popup-overlay.hidden {
@@ -285,29 +298,13 @@
       }
     }
 
-    .popup-loader {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      border: 4px solid #f0f0f0;
-      border-top-color: #ff0050;
-      margin: 0 auto 14px;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
     .popup-check {
       width: 52px;
       height: 52px;
       border-radius: 50%;
       margin: 0 auto 14px;
       background: #16c47f;
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
@@ -387,10 +384,10 @@
       </div>
     </header>
 
-    <!-- INFO ------------------------------------------------------------- -->
+    <!-- NEUER HINWEIS ---------------------------------------------------- -->
     <div class="info-box">
-      <strong>Hinweis:</strong> Fun-/Demo-Seite. Es werden keine echten TikTok-Coins
-      verschickt und es findet keine reale Zahlung statt.
+      <strong>Achtung:</strong> Geschenke verschicken über TikTok kann süchtig
+      machen – bitte achtet auf euer Budget.
     </div>
 
     <!-- FORM CARD -------------------------------------------------------- -->
@@ -467,14 +464,13 @@
         </div>
       </div>
 
-      <!-- SPECIAL OFFER / KARTEN ---------------------------------------- -->
-      <div class="special-offer">
-        <div>Special offer</div>
-        <div class="cards-row">
-          <span>Demo cards:</span>
-          <span class="card-chip"></span>
-          <span class="card-chip"></span>
-          <span class="card-chip"></span>
+      <!-- ZAHLUNGSARTEN -------------------------------------------------- -->
+      <div class="payment-row">
+        <div class="payment-title">Zahlungsarten (Demo)</div>
+        <div class="payment-methods">
+          <span class="pay-pill pay-paypal">PayPal</span>
+          <span class="pay-pill pay-card">Kreditkarte</span>
+          <span class="pay-pill pay-crypto">Krypto</span>
         </div>
       </div>
 
@@ -490,21 +486,20 @@
     </div>
   </div>
 
-  <!-- POPUP --------------------------------------------------------------- -->
+  <!-- POPUP: ZAHLUNG BESTÄTIGT ------------------------------------------- -->
   <div id="paymentOverlay" class="popup-overlay hidden">
     <div class="popup">
-      <div id="popupLoader" class="popup-loader"></div>
-      <div id="popupCheck" class="popup-check">✓</div>
+      <div class="popup-check">✓</div>
 
-      <div id="popupTitle" class="popup-title">Processing your payment</div>
+      <div id="popupTitle" class="popup-title">Zahlung bestätigt</div>
       <div id="popupText" class="popup-text">
-        This could take few seconds
+        Die Coins werden gleich gutgeschrieben.
       </div>
 
       <div id="popupTimer" class="popup-timer">04:59</div>
       <div id="popupUser" class="popup-user"></div>
       <div id="popupPayInfo" class="popup-payinfo">
-        Demo-Zahlung – keine echten Karten.
+        Bezahlung mit <span>PayPal / Karte / Krypto</span> (Demo).
       </div>
     </div>
   </div>
@@ -518,14 +513,11 @@
     const balanceText = document.getElementById("balanceText");
     const coinsCards = document.querySelectorAll(".coin-card");
     const overlay = document.getElementById("paymentOverlay");
-    const popupLoader = document.getElementById("popupLoader");
-    const popupCheck = document.getElementById("popupCheck");
     const popupTitle = document.getElementById("popupTitle");
     const popupText = document.getElementById("popupText");
     const popupTimer = document.getElementById("popupTimer");
     const popupUser = document.getElementById("popupUser");
     const popupPayInfo = document.getElementById("popupPayInfo");
-    const sendButton = document.getElementById("sendButton");
 
     function formatNumber(num) {
       return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -568,7 +560,7 @@
       balance -= selectedCoins;
       updateBalanceDisplay();
 
-      // PopUp starten
+      // Popup starten (Zahlung bestätigt + Timer)
       startPaymentPopup(username, selectedCoins);
     }
 
@@ -578,62 +570,38 @@
         clearInterval(countdownInterval);
       }
 
-      // Ausgangszustand
-      popupLoader.style.display = "block";
-      popupCheck.style.display = "none";
-      popupTitle.textContent = "Processing your payment";
-      popupText.textContent = "This could take few seconds";
-      popupUser.textContent =
-        "Sending " + coins.toLocaleString("de-DE") + " coins to @" + username;
-      popupPayInfo.innerHTML = "Demo-Zahlung – keine echten Karten.";
-      popupTimer.textContent = "04:59";
-
-      overlay.classList.remove("hidden");
-      sendButton.disabled = true;
-
-      let time = 4 * 60 + 59; // 04:59 in Sekunden
-
-      countdownInterval = setInterval(() => {
-        const minutes = Math.floor(time / 60);
-        const seconds = time % 60;
-        popupTimer.textContent =
-          (minutes < 10 ? "0" + minutes : minutes) +
-          ":" +
-          (seconds < 10 ? "0" + seconds : seconds);
-
-        time--;
-
-        if (time < 0) {
-          clearInterval(countdownInterval);
-          showSuccess(username, coins);
-        }
-      }, 1000);
-    }
-
-    function showSuccess(username, coins) {
-      popupLoader.style.display = "none";
-      popupCheck.style.display = "flex";
-      popupTitle.textContent = "Payment completed";
-      popupText.textContent = "";
-      popupTimer.textContent = "00:00";
+      popupTitle.textContent = "Zahlung bestätigt";
+      popupText.textContent = "Die Coins werden gleich gutgeschrieben.";
       popupUser.textContent =
         coins.toLocaleString("de-DE") +
         " Coins erfolgreich an @" +
         username +
         " gesendet.";
       popupPayInfo.innerHTML =
-        "<span>Demo-Zahlung</span> mit Visa / Bankkarte bestätigt.";
+        'Bezahlung mit <span>PayPal / Karte / Krypto</span> (Demo).';
 
-      // wenn du nach der Zahlung auf eine externe Seite willst, hier URL einsetzen:
-      // setTimeout(() => {
-      //   window.location.href = "https://DEINE-DEMO-URL.de";
-      // }, 2000);
+      let time = 4 * 60 + 59; // 04:59 in Sekunden
+      updateTimerText(time);
+      overlay.classList.remove("hidden");
 
-      // Nur Pop-up schließen und Button wieder aktivieren:
-      setTimeout(() => {
-        overlay.classList.add("hidden");
-        sendButton.disabled = false;
-      }, 2500);
+      countdownInterval = setInterval(() => {
+        time--;
+        if (time < 0) {
+          clearInterval(countdownInterval);
+          overlay.classList.add("hidden");
+          return;
+        }
+        updateTimerText(time);
+      }, 1000);
+    }
+
+    function updateTimerText(time) {
+      const minutes = Math.floor(time / 60);
+      const seconds = time % 60;
+      popupTimer.textContent =
+        (minutes < 10 ? "0" + minutes : minutes) +
+        ":" +
+        (seconds < 10 ? "0" + seconds : seconds);
     }
 
     // Start: Guthaben anzeigen
