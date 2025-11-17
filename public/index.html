@@ -2,8 +2,9 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>TikTok Coins money – </title>
+  <title>TikTok Coins Versand – Demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
     * {
       box-sizing: border-box;
@@ -12,498 +13,72 @@
     }
 
     body {
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-      background: #ffffff; /* weißer Hintergrund */
-      color: #111;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    /* Oberer Bereich mit Münzenguthaben- Guthaben */
-    header {
-      width: 100%;
-      border-bottom: 1px solid #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
       background: #ffffff;
-      padding: 16px 12px 10px;
+      color: #111;
+      display: flex;
+      justify-content: center;
+      padding: 20px 10px 40px;
     }
 
-    .header-inner {
+    .page {
+      width: 100%;
       max-width: 480px;
-      margin: 0 auto;
-      text-align: center;
+    }
+
+    /* HEADER -------------------------------------------------------------- */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    .title {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #777;
+    }
+
+    .balance-box {
+      text-align: right;
     }
 
     .balance-label {
-      font-size: 13px;
-      font-weight: 500;
+      font-size: 12px;
       color: #777;
-      margin-bottom: 4px;
     }
 
     .balance-value {
-      font-size: 26px;
-      font-weight: 800;
-      color: #ff004f;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      justify-content: center;
-    }
-
-    .balance-coin-icon {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #fff9c4, #facc15);
-      border: 1px solid #eab308;
-      box-shadow: 0 0 4px rgba(234, 179, 8, 0.7);
-    }
-
-    .hint-text {
-      font-size: 11px;
-      color: #9ca3af;
-      margin-top: 4px;
-    }
-
-    main {
-      width: 100%;
-      max-width: 480px;
-      padding: 18px 14px 40px;
-    }
-
-    .label {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #333;
-    }
-
-    .input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-      margin-bottom: 18px;
-      outline: none;
-      background: #fafafa;
-    }
-
-    .input:focus {
-      border-color: #ff2b61;
-      box-shadow: 0 0 0 1px rgba(255, 43, 97, 0.2);
-      background: #ffffff;
-    }
-
-    .coins-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .coin-box {
-      border: 1px solid #ddd;
-      background: #fafafa;
-      border-radius: 14px;
-      padding: 10px 10px 9px;
-      cursor: pointer;
-      transition: 0.15s;
-      min-height: 64px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .coin-box.selected {
-      border-color: #ff2b61;
-      background: #ffe7ef;
-      box-shadow: 0 0 0 2px #ff2b61;
-    }
-
-    .coin-amount {
-      font-size: 15px;
-      font-weight: 600;
-      color: #111;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .coin-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #fff9c4, #facc15);
-      border: 1px solid #facc15;
-    }
-
-    .coin-price {
-      font-size: 12px;
-      color: #666;
-      margin-top: 3px;
-    }
-
-    .transfer-btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #ff0050, #ff2b61);
-      color: white;
-      font-size: 17px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 6px 20px rgba(255, 0, 80, 0.45);
-      margin-top: 6px;
-      transition: 0.1s;
-    }
-
-    .transfer-btn:active {
-      transform: translateY(1px);
-    }
-
-    .status-box {
-      margin-top: 16px;
-      font-size: 14px;
-      color: #333;
-      min-height: 40px;
-    }
-
-    .status-strong {
-      color: #ff004f;
-      font-weight: 700;
-    }
-
-    .status-green {
-      color: #16a34a;
-      font-weight: 700;
-    }
-
-    .demo-note {
-      margin-top: 10px;
-      font-size: 11px;
-      color: #9ca3af;
-      text-align: center;
-    }
-
-    /* Modal / Pop-up */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.4);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-    }
-
-    .modal {
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 18px 18px 14px;
-      width: 90%;
-      max-width: 320px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    }
-
-    .modal-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #dcfce7;
       display: flex;
       align-items: center;
-      justify-content: center;
-      margin: 0 auto 8px;
-      font-size: 22px;
-      color: #16a34a;
-      cursor: pointer;
-    }
-
-    .modal-title {
+      justify-content: flex-end;
+      gap: 4px;
+      font-weight: 700;
       font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 4px;
+      margin-top: 2px;
     }
 
-    .modal-text {
-      font-size: 13px;
-      color: #555;
-      margin-bottom: 14px;
-    }
-
-    .modal-button {
-      padding: 8px 16px;
-      border-radius: 999px;
-      border: none;
-      background: #10b981;
-      color: #ffffff;
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-    }
-
-    @media (max-width: 430px) {
-      main {
-        padding: 16px 12px 30px;
-      }
-      .header-inner {
-        padding-top: 4px;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- OBERE BALANCE -->
-  <header>
-    <div class="header-inner">
-      <div class="balance-label">Coins</div>
-      <div class="balance-value">
-        <span id="balanceDisplay">8.000.000</span>
-        <span class="balance-coin-icon"></span>
-      </div>
-      <div class="hint-text">
-        
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <!-- BENUTZERNAME -->
-    <label class="label" for="usernameInput">TikTok Benutzername</label>
-    <input
-      id="usernameInput"
-      class="input"
-      placeholder="@benutzername"
-      type="text"
-    />
-
-    <!-- COINS GRID -->
-    <div class="coins-grid" id="coinsGrid">
-      <div class="coin-box" data-coins="30">
-        <div class="coin-amount">
-          30 <span class="coin-dot"></span>
-        </div>
-        <div class="coin-price">$0.31</div>
-      </div>
-
-      <div class="coin-box" data-coins="350">
-        <div class="coin-amount">
-          350 <span class="coin-dot"></span>
-        </div>
-        <div class="coin-price">$3.65</div>
-      </div>
-
-      <div class="coin-box" data-coins="700">
-        <div class="coin-amount">
-          700 <span class="coin-dot"></span>
-        </div>
-        <div class="coin-price">$7.25</div>
-      </div>
-
-      <div class="coin-box" data-coins="1400">
-        <div class="coin-amount">
-          1400 <span class="coin-dot"></span>
-        </div>
-        <div class="coin-price">$14.49</div>
-      </div>
-
-      <div class="coin-box" data-coins="3500">
-        <div class="coin-amount">
-          3500 <span class="coin-dot"></span>
-        </div>
-        <div class="coin-price">$36.20</div>
-      </div>
-
-      <div class="coin-box" data-coins="custom">
-        <div class="coin-amount">
-          50000 <span class="coin-dot"></span>
-        </div>
-        <div class="">$260.22 </div>
-      </div>
-    </div>
-
-    <!-- TRANSFER BUTTON -->
-    <button class="transfer-btn" id="transferBtn">Transfer starten</button>
-
-    <!-- STATUS / COUNTDOWN -->
-    <div id="statusBox" class="status-box"></div>
-
-    <div class="demo-note">
-      ❤️ Herzlichen willkommen auf TikTok Coins Versand!
-    </div>
-  </main>
-
-  <!-- MODAL / POPUP -->
-  <div id="successModal" class="modal-overlay">
-    <div class="modal">
-      <div id="modalIcon" class="modal-icon">✔</div>
-      <div class="modal-title">Transfer abgeschlossen</div>
-      <div id="modalText" class="modal-text">
-        Coins wurden erfolgreich versendet.
-      </div>
-      <button id="modalCloseBtn" class="modal-button">Weiter</button>
-    </div>
-  </div>
-
-  <script>
-    let balance = 8002470; // Start-Guthaben
-    let selectedCoins = null;
-    let countdownInterval = null;
-
-    const balanceDisplay = document.getElementById("balanceDisplay");
-    const coinsGrid = document.getElementById("coinsGrid");
-    const transferBtn = document.getElementById("transferBtn");
-    const statusBox = document.getElementById("statusBox");
-    const usernameInput = document.getElementById("usernameInput");
-
-    const successModal = document.getElementById("successModal");
-    const modalText = document.getElementById("modalText");
-    const modalCloseBtn = document.getElementById("modalCloseBtn");
-    const modalIcon = document.getElementById("modalIcon");
-
-    function updateBalance() {
-      balanceDisplay.textContent = balance.toLocaleString("de-DE");
-    }
-
-    function formatTime(sec) {
-      const m = Math.floor(sec / 60);
-      const s = sec % 60;
-      return `${m}:${String(s).padStart(2, "0")}`;
-    }
-
-    function clearCountdown() {
-      if (countdownInterval) {
-        clearInterval(countdownInterval);
-        countdownInterval = null;
-      }
-    }
-
-    function showStatus(text, type) {
-      statusBox.classList.remove("status-green");
-      if (type === "success") {
-        statusBox.classList.add("status-green");
-      }
-      statusBox.innerHTML = text;
-    }
-
-    function showModal(username, coins) {
-      modalText.innerHTML =
-        `<span class="status-green">${coins.toLocaleString("de-DE")} Coins</span> ` +
-        `wurden in dieser Demo an <span class="status-strong">@${username}</span> versendet.`;
-      successModal.style.display = "flex";
-    }
-
-    // Beim Klick auf grünen Haken oder Button → externe Seite öffnen (z.B. TikTok)
-    function goToExternal() {
-      successModal.style.display = "none";
-      window.open("https://www.tiktok.com", "_blank");
-    }
-
-    modalCloseBtn.addEventListener("click", goToExternal);
-    modalIcon.addEventListener("click", goToExternal);
-
-    // Auswahl der Coins
-    coinsGrid.addEventListener("click", (e) => {
-      const box = e.target.closest(".coin-box");
-      if (!box) return;
-
-      document.querySelectorAll(".coin-box").forEach((b) =>
-        b.classList.remove("selected")
-      );
-      box.classList.add("selected");
-
-      const value = box.dataset.coins;
-      if (value === "custom") {
-        const custom = prompt("Gib deine gewünschte Coin-Anzahl ein:");
-        if (custom && !isNaN(custom) && Number(custom) > 0) {
-          selectedCoins = Number(custom);
-          box.querySelector(".coin-amount").innerHTML =
-            `${selectedCoins} <span class="coin-dot"></span>`;
-        } else {
-          selectedCoins = null;
-          box.classList.remove("selected");
-        }
-      } else {
-        selectedCoins = Number(value);
-      }
-    });
-
-    // Transfer starten
-    transferBtn.addEventListener("click", () => {
-      const username = usernameInput.value.trim().replace(/^@/, "");
-
-      if (!username) {
-        alert("Bitte TikTok Benutzernamen eingeben.");
-        return;
-      }
-
-      if (!selectedCoins) {
-        alert("Bitte Coins auswählen.");
-        return;
-      }
-
-      if (balance < selectedCoins) {
-        alert("Nicht genug Coins im Guthaben!");
-        return;
-      }
-
-      // Guthaben sofort reduzieren
-      balance -= selectedCoins;
-      updateBalance();
-
-      // Countdown 4:59 Minuten
-      clearCountdown();
-      let time = 4 * 60 + 59; // 4:59
-
-      showStatus(
-        `⏳ Transfer vorbereitet: <span class="status-strong">${selectedCoins.toLocaleString(
-          "de-DE"
-        )}</span> Coins an <span class="status-strong">@${username}</span>.<br>` +
-          `Versand in <span class="status-strong">${formatTime(time)}</span>.`,
-        ""
-      );
-
-      // Button NICHT deaktivieren → man kann weiter senden, während Countdown läuft
-
-      countdownInterval = setInterval(() => {
-        time--;
-        if (time <= 0) {
-          clearCountdown();
-          showStatus(
-            `✅ <span class="status-green">Transfer abgeschlossen.</span><br>` +
-              `${selectedCoins.toLocaleString(
-                "de-DE"
-              )} Coins wurden an <span class="status-strong">@${username}</span> gesendet (Demo).`,
-            "success"
-          );
-          showModal(username, selectedCoins);
-          return;
-        }
-
-        showStatus(
-          `⏳ Versand in <span class="status-strong">${formatTime(
-            time
-          )}</span>…<br>` +
-            `${selectedCoins.toLocaleString(
-              "de-DE"
-            )} Coins gehen an <span class="status-strong">@${username}</span>.`,
-          ""
-        );
-      }, 1000);
-    });
-
-    // Startanzeige
-    updateBalance();
-    showStatus(
-      "Bereit. Wähle ein Coin-Paket und gib deinen TikTok Namen ein.",
-      ""
-    );
-  </script>
-</body>
-</html>
+    .coin-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffd54f, #f4a629);
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06
