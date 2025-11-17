@@ -46,7 +46,7 @@
       height: 32px;
       object-fit: contain;
       border-radius: 8px;
-      background: #000;
+      background: #000;       /* deine eigene Grafik: logo.png */
     }
 
     .title {
@@ -260,7 +260,7 @@
       background: #fff;
     }
 
-    /* POPUP "Zahlung bestätigt" ------------------------------------------ */
+    /* POPUP OVERLAY ------------------------------------------------------- */
     .popup-overlay {
       position: fixed;
       inset: 0;
@@ -268,8 +268,8 @@
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      background: transparent;      /* kein dunkler Hintergrund */
-      pointer-events: none;         /* blockiert keine Klicks */
+      background: transparent;      /* blockiert keine Klicks */
+      pointer-events: none;
     }
 
     .popup-overlay.hidden {
@@ -298,11 +298,31 @@
       }
     }
 
+    .popup-icon-wrap {
+      margin-bottom: 12px;
+    }
+
+    .processing-circle {
+      width: 46px;
+      height: 46px;
+      margin: 0 auto;
+      border-radius: 50%;
+      border: 3px solid #ffe1eb;
+      border-top-color: #ff0050;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
     .popup-check {
       width: 52px;
       height: 52px;
       border-radius: 50%;
-      margin: 0 auto 14px;
+      margin: 0 auto;
       background: #16c47f;
       display: flex;
       align-items: center;
@@ -346,6 +366,10 @@
       color: #16c47f;
     }
 
+    .hidden {
+      display: none;
+    }
+
     /* FOOTER NOTE --------------------------------------------------------- */
     .footer-note {
       margin-top: 10px;
@@ -367,7 +391,7 @@
     <!-- HEADER ----------------------------------------------------------- -->
     <header class="header">
       <div class="brand">
-        <!-- Logo-Datei "logo.png" in den gleichen Ordner legen -->
+        <!-- Achtung: hier deine eigene Datei logo.png verwenden, NICHT das echte TikTok-Logo -->
         <img src="logo.png" alt="Logo" class="logo" />
         <div>
           <div class="title">TikTok Coins Versand</div>
@@ -384,7 +408,7 @@
       </div>
     </header>
 
-    <!-- NEUER HINWEIS ---------------------------------------------------- -->
+    <!-- HINWEIS ----------------------------------------------------------- -->
     <div class="info-box">
       <strong>Achtung:</strong> Geschenke verschicken über TikTok kann süchtig
       machen – bitte achtet auf euer Budget.
@@ -482,18 +506,22 @@
     </div>
 
     <div class="footer-note">
-      Fun-Projekt – nur zu Unterhaltungszwecken.
+      Fun-Projekt – nur zu Unterhaltungszwecken. Keine echte Verbindung zu TikTok.
     </div>
   </div>
 
-  <!-- POPUP: ZAHLUNG BESTÄTIGT ------------------------------------------- -->
+  <!-- POPUP: PROCESSING + ZAHLUNG BESTÄTIGT ------------------------------ -->
   <div id="paymentOverlay" class="popup-overlay hidden">
     <div class="popup">
-      <div class="popup-check">✓</div>
+      <div class="popup-icon-wrap">
+        <!-- Zwei Zustände: drehender Kreis & grüner Haken -->
+        <div id="processingIcon" class="processing-circle"></div>
+        <div id="checkIcon" class="popup-check hidden">✓</div>
+      </div>
 
-      <div id="popupTitle" class="popup-title">Zahlung bestätigt</div>
+      <div id="popupTitle" class="popup-title">Processing your payment</div>
       <div id="popupText" class="popup-text">
-        Die Coins werden gleich gutgeschrieben.
+        This could take a few seconds.
       </div>
 
       <div id="popupTimer" class="popup-timer">04:59</div>
@@ -509,6 +537,7 @@
     let balance = 8000000;
     let selectedCoins = 0;
     let countdownInterval = null;
+    let processingTimeout = null;
 
     const balanceText = document.getElementById("balanceText");
     const coinsCards = document.querySelectorAll(".coin-card");
@@ -518,6 +547,8 @@
     const popupTimer = document.getElementById("popupTimer");
     const popupUser = document.getElementById("popupUser");
     const popupPayInfo = document.getElementById("popupPayInfo");
+    const processingIcon = document.getElementById("processingIcon");
+    const checkIcon = document.getElementById("checkIcon");
 
     function formatNumber(num) {
       return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -560,30 +591,36 @@
       balance -= selectedCoins;
       updateBalanceDisplay();
 
-      // Popup starten (Zahlung bestätigt + Timer)
+      // Popup starten
       startPaymentPopup(username, selectedCoins);
     }
 
     // Pop-Up & Countdown ---------------------------------------------------
     function startPaymentPopup(username, coins) {
-      if (countdownInterval) {
-        clearInterval(countdownInterval);
-      }
+      // vorhandene Timer stoppen
+      if (countdownInterval) clearInterval(countdownInterval);
+      if (processingTimeout) clearTimeout(processingTimeout);
 
-      popupTitle.textContent = "Zahlung bestätigt";
-      popupText.textContent = "Die Coins werden gleich gutgeschrieben.";
+      // Erst: „Processing your payment“ + drehender Kreis
+      processingIcon.classList.remove("hidden");
+      checkIcon.classList.add("hidden");
+
+      popupTitle.textContent = "Processing your payment";
+      popupText.textContent = "This could take a few seconds.";
       popupUser.textContent =
         coins.toLocaleString("de-DE") +
-        " Coins erfolgreich an @" +
+        " Coins werden an @" +
         username +
         " gesendet.";
       popupPayInfo.innerHTML =
-        'Bezahlung mit <span>PayPal / Karte / Krypto</span> (Demo).';
+        'Bezahlung mit <span>PayPal / Karte / Krypto</span> .';
 
-      let time = 4 * 60 + 59; // 04:59 in Sekunden
+      // 04:59 einstellen
+      let time = 4 * 60 + 59;
       updateTimerText(time);
       overlay.classList.remove("hidden");
 
+      // Countdown läuft
       countdownInterval = setInterval(() => {
         time--;
         if (time < 0) {
@@ -593,6 +630,19 @@
         }
         updateTimerText(time);
       }, 1000);
+
+      // Nach ein paar Sekunden: „Zahlung bestätigt“ + grüner Haken
+      processingTimeout = setTimeout(() => {
+        processingIcon.classList.add("hidden");
+        checkIcon.classList.remove("hidden");
+        popupTitle.textContent = "Zahlung bestätigt";
+        popupText.textContent = "Die Coins wurden gutgeschrieben.";
+        popupUser.textContent =
+          coins.toLocaleString("de-DE") +
+          " Coins erfolgreich an @" +
+          username +
+          " gesendet.";
+      }, 4000); // nach 4 Sek. auf „confirmed“ umschalten
     }
 
     function updateTimerText(time) {
