@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TikTok Coins Versand – Login</title>
+  <title>TikTok Coins Versand</title>
 
   <style>
     * {
@@ -39,54 +39,42 @@
       background-image: url("https://raw.githubusercontent.com/Nuqat76/Fun-Coins-/refs/heads/main/public/file_000000007518720aa89d447f28a06907.png");
       background-size: cover;
       background-position: center;
-      filter: brightness(0.7);
       z-index: -1;
     }
 
+    /* kleiner Loginblock oben links, halb durchsichtig */
+
     .login-box {
-      background: rgba(0, 0, 0, 0.78);
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      background: rgba(0, 0, 0, 0.55);
       color: #fff;
-      padding: 18px 20px;
-      border-radius: 14px;
-      width: 90%;
-      max-width: 320px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
-    }
-
-    .login-title {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    .login-sub {
-      font-size: 12px;
-      color: #ccc;
-      margin-bottom: 14px;
-    }
-
-    .login-label {
-      font-size: 12px;
-      margin-bottom: 4px;
-      display: block;
+      padding: 8px 10px;
+      border-radius: 10px;
+      width: 260px;
+      backdrop-filter: blur(3px);
     }
 
     .login-input {
       width: 100%;
-      padding: 8px 10px;
-      border-radius: 8px;
+      padding: 7px 9px;
+      border-radius: 7px;
       border: none;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
       font-size: 13px;
+    }
+
+    .login-input::placeholder {
+      color: #777;
     }
 
     .login-btn {
       width: 100%;
-      padding: 9px 10px;
+      padding: 8px 9px;
       border-radius: 999px;
       border: none;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       background: linear-gradient(90deg, #ff375f, #ff8248);
       color: #fff;
@@ -97,18 +85,11 @@
       transform: translateY(1px);
     }
 
-    .login-hint {
-      margin-top: 8px;
-      font-size: 11px;
-      color: #e0e0e0;
-      line-height: 1.3;
-    }
-
     .login-error {
-      margin-top: 6px;
+      margin-top: 4px;
       font-size: 11px;
       color: #ff8a8a;
-      min-height: 14px;
+      min-height: 12px;
     }
 
     /* ---------- HAUPTSEITE / APP ---------- */
@@ -230,8 +211,6 @@
       color: #777;
     }
 
-    /* Eigene Münzanzahl */
-
     .custom-input {
       width: 100%;
       border-radius: 10px;
@@ -240,8 +219,6 @@
       font-size: 14px;
       margin-top: 6px;
     }
-
-    /* Senden Button */
 
     .send-btn {
       width: 100%;
@@ -350,8 +327,6 @@
       color: #fff;
     }
 
-    /* einfaches Loading */
-
     .loading {
       display: flex;
       flex-direction: column;
@@ -388,19 +363,14 @@
     <div class="login-bg"></div>
 
     <div class="login-box">
-      <div class="login-title">Login</div>
-      <div class="login-sub">Melde dich an, um die Münzguthaben-Seite zu benutzen.</div>
-
-      <label class="login-label" for="loginEmail">E-Mail-Adresse</label>
+      <!-- NUR E-MAIL & PASSWORT -->
       <input
         id="loginEmail"
         class="login-input"
         type="email"
-        placeholder="z.B. Dubai-test@gmx.com"
+        placeholder="E-Mail-Adresse"
         autocomplete="off"
       />
-
-      <label class="login-label" for="loginPassword">Passwort</label>
       <input
         id="loginPassword"
         class="login-input"
@@ -409,11 +379,7 @@
         autocomplete="off"
       />
 
-      <button class="login-btn" onclick="handleLogin()">Anmelden</button>
-
-      <div class="login-hint">
-        Hinweis: Die Sitzung läuft nach <strong>60 Minuten</strong> automatisch ab.
-      </div>
+      <button class="login-btn" onclick="handleLogin()">Login</button>
       <div id="loginError" class="login-error"></div>
     </div>
   </div>
@@ -444,7 +410,6 @@
       <div class="card">
         <div class="section-title">Münzpakete auswählen</div>
         <div id="coinGrid" class="coin-grid">
-          <!-- Du kannst Beträge & Preise hier einfach anpassen -->
           <div class="coin-option" data-coins="60" data-price="0,87 €">
             <div class="coin-top">
               <div class="coin-icon">T</div>
@@ -515,14 +480,13 @@
 
   <!-- ZAHLUNGSMODAL -->
   <div id="paymentModal" class="modal-backdrop hidden">
-    <div class="modal" id="modalContent">
-      <!-- Inhalt wird per JavaScript ersetzt (erst Loading, dann Bestätigung) -->
-    </div>
+    <div class="modal" id="modalContent"></div>
   </div>
 
   <script>
-    const CORRECT_EMAIL = "Dubai-test@gmx.com";
-    const CORRECT_PASSWORD = "Tiktokcoins123";
+    // <<< HIER ÄNDERST DU LOGIN-DATEN >>>
+    const LOGIN_EMAIL = "Dubai-test@gmx.com";
+    const LOGIN_PASSWORD = "Tiktokcoins123"; // jedes Mal im Code ändern, wenn du willst
 
     let sessionTimeoutId = null;
 
@@ -531,22 +495,16 @@
       const password = document.getElementById("loginPassword").value.trim();
       const errorEl = document.getElementById("loginError");
 
-      if (email === "" || password === "") {
-        errorEl.textContent = "Bitte E-Mail und Passwort eingeben.";
+      if (email !== LOGIN_EMAIL || password !== LOGIN_PASSWORD) {
+        errorEl.textContent = "Login-Daten sind falsch.";
         return;
       }
 
-      if (email !== CORRECT_EMAIL || password !== CORRECT_PASSWORD) {
-        errorEl.textContent = "E-Mail oder Passwort ist falsch.";
-        return;
-      }
-
-      // Erfolg: Login-Screen weg, App zeigen
       errorEl.textContent = "";
       document.getElementById("loginScreen").classList.add("hidden");
       document.getElementById("appScreen").classList.remove("hidden");
 
-      // Session-Timer (60 Minuten)
+      // Sitzung nach 60 Minuten automatisch beenden
       if (sessionTimeoutId) clearTimeout(sessionTimeoutId);
       sessionTimeoutId = setTimeout(logout, 60 * 60 * 1000);
     }
@@ -559,8 +517,7 @@
         "Sitzung abgelaufen. Bitte erneut anmelden.";
     }
 
-    // Coin-Optionen auswählen
-    const coinGrid = document.getElementById("coinGrid");
+    // Coin-Optionen
     const coinOptions = Array.from(
       document.getElementsByClassName("coin-option")
     );
@@ -583,7 +540,7 @@
 
       if (custom) {
         coins = custom;
-        price = "–"; // Demo
+        price = "–";
       } else if (selected) {
         coins = selected.getAttribute("data-coins");
         price = selected.getAttribute("data-price");
@@ -606,7 +563,6 @@
       const modal = document.getElementById("paymentModal");
       const content = document.getElementById("modalContent");
 
-      // Schritt 1: Loading-Anzeige
       content.innerHTML = `
         <div class="loading">
           <div class="spinner"></div>
@@ -617,7 +573,6 @@
 
       modal.classList.remove("hidden");
 
-      // Nach 1 Sekunde Bestätigung anzeigen
       setTimeout(() => {
         content.innerHTML = `
           <div class="modal-check">✓</div>
@@ -636,7 +591,6 @@
           </div>
         `;
 
-        // Nach 2 Sekunden Modal schließen
         setTimeout(() => {
           modal.classList.add("hidden");
         }, 2000);
