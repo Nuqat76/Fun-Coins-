@@ -92,32 +92,62 @@
       min-height: 12px;
     }
 
-    /* ---------- HAUPTSEITE / APP ---------- */
+    /* ---------- HAUPTSEITE / COINS (alter Look) ---------- */
 
     #appScreen {
       min-height: 100vh;
       background: #f5f5f7;
-      padding: 16px;
+      padding: 16px 16px 32px;
     }
 
     .page {
-      max-width: 600px;
-      margin: 0 auto 40px;
+      max-width: 480px;
+      margin: 0 auto;
     }
 
-    .header {
-      margin-bottom: 16px;
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
     }
 
-    .header h1 {
-      font-size: 20px;
+    .title-block h1 {
+      font-size: 18px;
       font-weight: 700;
-      margin-bottom: 4px;
     }
 
-    .header p {
-      font-size: 13px;
-      color: #555;
+    .title-block p {
+      font-size: 12px;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    .balance-block {
+      text-align: right;
+    }
+
+    .balance-label {
+      font-size: 12px;
+      color: #777;
+    }
+
+    .balance-value {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .coin-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffeaa7, #f1c40f);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.12);
     }
 
     .card {
@@ -128,120 +158,143 @@
       margin-bottom: 16px;
     }
 
-    .section-title {
-      font-size: 14px;
+    .card-title {
+      font-size: 16px;
       font-weight: 600;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
+    }
+
+    .card-sub {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 12px;
+    }
+
+    .username-label {
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 8px;
+      margin-bottom: 6px;
     }
 
     .username-row {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-top: 6px;
+      gap: 6px;
+      margin-bottom: 12px;
     }
 
     .username-prefix {
       font-size: 14px;
-      color: #888;
+      padding: 10px;
       background: #f5f5f7;
-      padding: 8px 10px;
       border-radius: 10px;
+      color: #777;
     }
 
     .username-input {
       flex: 1;
       border-radius: 10px;
       border: 1px solid #ddd;
-      padding: 8px 10px;
+      padding: 10px 12px;
       font-size: 14px;
+      background: #fafafa;
     }
 
-    /* Münzpakete */
+    .username-input:focus {
+      outline: none;
+      border-color: #ff4664;
+      box-shadow: 0 0 0 1px rgba(255,70,100,0.16);
+      background: #fff;
+    }
 
-    .coin-grid {
+    .coins-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin: 6px 0 8px;
+    }
+
+    .coins-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-      margin-top: 8px;
     }
 
     .coin-option {
-      border-radius: 14px;
-      border: 1px solid #eee;
-      padding: 10px;
       background: #fafafa;
+      border-radius: 14px;
+      padding: 10px 6px;
+      border: 1px solid #e5e5ea;
+      text-align: center;
       cursor: pointer;
-      transition: border 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+      transition: all 0.15s ease-out;
     }
 
     .coin-option.selected {
-      border-color: #ff4a5f;
-      background: #ffeef1;
-      box-shadow: 0 0 0 1px rgba(255, 74, 95, 0.3);
-    }
-
-    .coin-top {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 4px;
+      border-color: #ff4664;
+      background: #fff2f5;
+      box-shadow: 0 0 0 1px rgba(255, 70, 100, 0.3);
     }
 
     .coin-icon {
-      width: 18px;
-      height: 18px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, #fff7c2, #ffb700);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff3c4, #f1c40f);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-      color: #8a5800;
+      font-size: 11px;
+      margin: 0 auto 4px;
     }
 
     .coin-amount {
-      font-size: 14px;
       font-weight: 600;
+      font-size: 14px;
     }
 
     .coin-price {
-      font-size: 12px;
+      font-size: 11px;
       color: #777;
     }
 
-    .custom-input {
-      width: 100%;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      padding: 8px 10px;
-      font-size: 14px;
-      margin-top: 6px;
+    .custom-coins-label {
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 500;
     }
 
-    .send-btn {
+    .custom-coins-input {
+      margin-top: 4px;
       width: 100%;
-      padding: 12px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background: #fafafa;
+      font-size: 14px;
+    }
+
+    .primary-btn {
+      margin-top: 14px;
+      width: 100%;
       border-radius: 999px;
+      padding: 14px;
+      color: white;
+      background: linear-gradient(90deg,#ff4664,#ff884b);
       border: none;
-      margin-top: 10px;
+      font-weight: 700;
       font-size: 15px;
-      font-weight: 600;
-      background: linear-gradient(90deg, #ff375f, #ff8248);
-      color: #fff;
       cursor: pointer;
     }
 
-    .send-btn:active {
+    .primary-btn:active {
       transform: translateY(1px);
     }
 
-    .footer-note {
-      font-size: 11px;
-      color: #777;
+    .transfer-status {
       margin-top: 8px;
-      text-align: center;
+      font-size: 12px;
+      color: #666;
     }
 
     /* ---------- ZAHLUNGSMODAL ---------- */
@@ -266,6 +319,27 @@
       text-align: center;
     }
 
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .spinner {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 3px solid #f0f0f0;
+      border-top-color: #ff4a5f;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
     .modal-check {
       width: 54px;
       height: 54px;
@@ -288,19 +362,20 @@
     .modal-text {
       font-size: 13px;
       color: #555;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .modal-time {
       font-size: 26px;
       font-weight: 700;
       margin-bottom: 6px;
+      letter-spacing: 2px;
     }
 
     .modal-detail {
       font-size: 13px;
       color: #555;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .payment-row {
@@ -326,44 +401,15 @@
       font-weight: 700;
       color: #fff;
     }
-
-    .loading {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-
-    .spinner {
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
-      border: 3px solid #f0f0f0;
-      border-top-color: #ff4a5f;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .modal-small {
-      font-size: 12px;
-      color: #777;
-    }
   </style>
 </head>
 
 <body>
-  <!-- LOGIN mit Startbild -->
+  <!-- LOGIN mit Startbild (nur E-Mail + Passwort, klein) -->
   <div id="loginScreen">
     <div class="login-bg"></div>
 
     <div class="login-box">
-      <!-- NUR E-MAIL & PASSWORT -->
       <input
         id="loginEmail"
         class="login-input"
@@ -384,109 +430,93 @@
     </div>
   </div>
 
-  <!-- HAUPTSEITE / COINS -->
+  <!-- HAUPTSEITE wie vorher -->
   <div id="appScreen" class="hidden">
     <div class="page">
-      <header class="header">
-        <h1>Münzguthaben versenden</h1>
-        <p>Gib den TikTok-Nutzernamen ein und wähle das Münzpaket.</p>
+      <header>
+        <div class="title-block">
+          <h1>TikTok Coins Versand</h1>
+          <p>Herzlich willkommen auf TikTok Coins Versand</p>
+        </div>
+        <div class="balance-block">
+          <div class="balance-label">Münzguthaben</div>
+          <div class="balance-value">
+            <span id="balanceValue">8.000.000</span>
+            <span class="coin-dot"></span>
+          </div>
+        </div>
       </header>
 
-      <!-- Benutzername -->
+      <!-- Card Benutzername + Coins -->
       <div class="card">
-        <div class="section-title">Benutzername</div>
+        <div class="card-title">Benutzername</div>
+        <div class="card-sub">Gib den TikTok-Nutzernamen ein.</div>
+
+        <div class="username-label">@ Benutzername</div>
         <div class="username-row">
           <div class="username-prefix">@</div>
-          <input
-            id="usernameInput"
-            class="username-input"
-            type="text"
-            placeholder="TikTok-Name"
-          />
+          <input id="usernameInput" class="username-input" placeholder="z.B. dein_name" />
         </div>
-      </div>
 
-      <!-- Münzpakete -->
-      <div class="card">
-        <div class="section-title">Münzpakete auswählen</div>
-        <div id="coinGrid" class="coin-grid">
-          <div class="coin-option" data-coins="60" data-price="0,87 €">
-            <div class="coin-top">
-              <div class="coin-icon">T</div>
-              <div class="coin-amount">60 Münzen</div>
-            </div>
+        <div class="coins-title">Coins-Pakete auswählen</div>
+
+        <div class="coins-grid" id="coinsGrid">
+          <div class="coin-option selected" data-coins="60" data-price="0,87 €">
+            <div class="coin-icon"></div>
+            <div class="coin-amount">60 Coins</div>
             <div class="coin-price">0,87 €</div>
           </div>
 
           <div class="coin-option" data-coins="139" data-price="2,00 €">
-            <div class="coin-top">
-              <div class="coin-icon">T</div>
-              <div class="coin-amount">139 Münzen</div>
-            </div>
+            <div class="coin-icon"></div>
+            <div class="coin-amount">139 Coins</div>
             <div class="coin-price">2,00 €</div>
           </div>
 
           <div class="coin-option" data-coins="630" data-price="9,05 €">
-            <div class="coin-top">
-              <div class="coin-icon">T</div>
-              <div class="coin-amount">630 Münzen</div>
-            </div>
+            <div class="coin-icon"></div>
+            <div class="coin-amount">630 Coins</div>
             <div class="coin-price">9,05 €</div>
           </div>
 
           <div class="coin-option" data-coins="840" data-price="12,09 €">
-            <div class="coin-top">
-              <div class="coin-icon">T</div>
-              <div class="coin-amount">840 Münzen</div>
-            </div>
+            <div class="coin-icon"></div>
+            <div class="coin-amount">840 Coins</div>
             <div class="coin-price">12,09 €</div>
           </div>
 
-          <div class="coin-option" data-coins="10000" data-price="1.103,00 €">
-            <div class="coin-top">
-              <div class="coin-icon">T</div>
-              <div class="coin-amount">10.000 Münzen</div>
-            </div>
-            <div class="coin-price">1.103,00 €</div>
+          <div class="coin-option" data-coins="10000" data-price="1.103 €">
+            <div class="coin-icon"></div>
+            <div class="coin-amount">10.000 Coins</div>
+            <div class="coin-price">1.103 €</div>
           </div>
 
           <div class="coin-option" data-coins="50000" data-price="5.408,75 €">
-            <div class="coin-top">
-              <div class="coin-icon">T</div>
-              <div class="coin-amount">50.000 Münzen</div>
-            </div>
+            <div class="coin-icon"></div>
+            <div class="coin-amount">50.000 Coins</div>
             <div class="coin-price">5.408,75 €</div>
           </div>
         </div>
-      </div>
 
-      <!-- Eigene Anzahl -->
-      <div class="card">
-        <div class="section-title">Eigene Münzanzahl (optional)</div>
-        <input
-          id="customCoins"
-          class="custom-input"
-          type="number"
-          min="1"
-          placeholder="Eigene Anzahl eingeben (z.B. 85000)"
-        />
-        <button class="send-btn" onclick="sendCoins()">Coins senden</button>
-        <div class="footer-note">
-          Demo-Seite: Es werden keine echten Zahlungen ausgeführt.
-        </div>
+        <div class="custom-coins-label">Eigene Coins (optional)</div>
+        <input id="customCoinsInput" class="custom-coins-input" type="number" placeholder="z.B. 1234" />
+
+        <button id="sendButton" class="primary-btn">Coins senden</button>
+
+        <div id="transferStatus" class="transfer-status"></div>
       </div>
     </div>
   </div>
 
-  <!-- ZAHLUNGSMODAL -->
+  <!-- ZAHLUNGS-MODAL -->
   <div id="paymentModal" class="modal-backdrop hidden">
     <div class="modal" id="modalContent"></div>
   </div>
 
   <script>
-    // <<< HIER ÄNDERST DU LOGIN-DATEN >>>
+    // <<< HIER kannst du Login-Daten ändern >>>
     const LOGIN_EMAIL = "Dubai-test@gmx.com";
-    const LOGIN_PASSWORD = "Tiktokcoins123"; // jedes Mal im Code ändern, wenn du willst
+    const LOGIN_PASSWORD = "Tiktokcoins123";
 
     let sessionTimeoutId = null;
 
@@ -504,98 +534,103 @@
       document.getElementById("loginScreen").classList.add("hidden");
       document.getElementById("appScreen").classList.remove("hidden");
 
-      // Sitzung nach 60 Minuten automatisch beenden
       if (sessionTimeoutId) clearTimeout(sessionTimeoutId);
-      sessionTimeoutId = setTimeout(logout, 60 * 60 * 1000);
+      sessionTimeoutId = setTimeout(logout, 60 * 60 * 1000); // 60 Minuten
     }
 
     function logout() {
       document.getElementById("appScreen").classList.add("hidden");
       document.getElementById("loginScreen").classList.remove("hidden");
       document.getElementById("loginPassword").value = "";
-      document.getElementById("loginError").textContent =
-        "Sitzung abgelaufen. Bitte erneut anmelden.";
+      document.getElementById("loginError").textContent = "Sitzung abgelaufen. Bitte erneut anmelden.";
     }
 
-    // Coin-Optionen
-    const coinOptions = Array.from(
-      document.getElementsByClassName("coin-option")
-    );
+    // Coins-Logik (alter Stil)
+    let balance = 8000000;
+    let selectedCoins = 60;
 
-    coinOptions.forEach((opt) => {
-      opt.addEventListener("click", () => {
-        coinOptions.forEach((o) => o.classList.remove("selected"));
-        opt.classList.add("selected");
-        document.getElementById("customCoins").value = "";
+    const balanceSpan = document.getElementById("balanceValue");
+    const coinsOptions = document.querySelectorAll(".coin-option");
+    const sendButton = document.getElementById("sendButton");
+    const usernameInput = document.getElementById("usernameInput");
+    const customCoinsInput = document.getElementById("customCoinsInput");
+    const transferStatus = document.getElementById("transferStatus");
+    const modal = document.getElementById("paymentModal");
+    const modalContent = document.getElementById("modalContent");
+
+    function updateBalance() {
+      balanceSpan.textContent = balance.toLocaleString("de-DE");
+    }
+    updateBalance();
+
+    coinsOptions.forEach(option => {
+      option.addEventListener("click", () => {
+        coinsOptions.forEach(o => o.classList.remove("selected"));
+        option.classList.add("selected");
+        selectedCoins = parseInt(option.dataset.coins);
+        customCoinsInput.value = "";
       });
     });
 
-    function sendCoins() {
-      const username = document.getElementById("usernameInput").value.trim();
-      const custom = document.getElementById("customCoins").value.trim();
-
-      let selected = coinOptions.find((o) => o.classList.contains("selected"));
-      let coins = "";
-      let price = "";
-
-      if (custom) {
-        coins = custom;
-        price = "–";
-      } else if (selected) {
-        coins = selected.getAttribute("data-coins");
-        price = selected.getAttribute("data-price");
-      }
-
-      if (!username) {
-        alert("Bitte zuerst einen TikTok-Benutzernamen eingeben.");
-        return;
-      }
-
-      if (!coins) {
-        alert("Bitte ein Münzpaket auswählen oder eigene Münzanzahl eingeben.");
-        return;
-      }
-
-      openPaymentModal(username, coins, price);
-    }
-
     function openPaymentModal(username, coins, price) {
-      const modal = document.getElementById("paymentModal");
-      const content = document.getElementById("modalContent");
-
-      content.innerHTML = `
+      modalContent.innerHTML = `
         <div class="loading">
           <div class="spinner"></div>
           <div>Zahlung wird verarbeitet …</div>
         </div>
-        <div class="modal-small">Bitte warten, bis die Bestätigung erscheint.</div>
+        <div class="modal-small">Bitte warten …</div>
       `;
-
       modal.classList.remove("hidden");
 
       setTimeout(() => {
-        content.innerHTML = `
+        modalContent.innerHTML = `
           <div class="modal-check">✓</div>
           <div class="modal-title">Zahlung bestätigt</div>
-          <div class="modal-text">Die Kartenzahlung wurde erfolgreich ausgeführt.</div>
-          <div class="modal-time">04:42</div>
+          <div class="modal-text">Die Zahlung wurde erfolgreich ausgeführt.</div>
+          <div class="modal-time">04:59</div>
           <div class="modal-detail">
-            ${coins} Münzen wurden erfolgreich an @${username} gesendet.
+            ${coins.toLocaleString("de-DE")} Coins wurden erfolgreich an @${username} gesendet.
           </div>
           <div class="payment-row">
             <div class="paypal-logo">P</div>
             <span>Bezahlt mit PayPal •••• 1708</span>
           </div>
-          <div class="modal-small" style="margin-top:8px;">
-            Dieses Fenster schließt sich automatisch.
-          </div>
         `;
-
         setTimeout(() => {
           modal.classList.add("hidden");
         }, 2000);
       }, 1000);
     }
+
+    sendButton.addEventListener("click", () => {
+      const user = usernameInput.value.trim();
+      if (!user) {
+        alert("Bitte Benutzername eingeben!");
+        return;
+      }
+
+      let coins = selectedCoins;
+      if (customCoinsInput.value) {
+        coins = parseInt(customCoinsInput.value);
+        if (isNaN(coins) || coins <= 0) {
+          alert("Bitte eine gültige Coin-Anzahl eingeben.");
+          return;
+        }
+      }
+
+      if (coins > balance) {
+        alert("Nicht genug Coin-Guthaben.");
+        return;
+      }
+
+      balance -= coins;
+      updateBalance();
+
+      transferStatus.textContent =
+        `${coins.toLocaleString("de-DE")} Coins erfolgreich an @${user} gesendet.`;
+
+      openPaymentModal(user, coins);
+    });
   </script>
 </body>
 </html>
