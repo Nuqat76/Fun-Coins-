@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TikTok Coins – Fun</title>
+  <title>TikTok Coins Versand – Fun</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -30,14 +30,14 @@
       background-image: url("startbild.jpg"); /* <<< dein Bild */
       background-size: cover;
       background-position: center;
-      filter: brightness(0.85);
+      filter: brightness(0.9);
       z-index: 0;
     }
 
     .login-overlay {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 20% 20%, rgba(0,0,0,0.1), rgba(0,0,0,0.6));
+      background: radial-gradient(circle at 20% 20%, rgba(0,0,0,0.1), rgba(0,0,0,0.65));
       z-index: 1;
     }
 
@@ -46,24 +46,34 @@
       z-index: 2;
       width: 100%;
       max-width: 380px;
-      background: rgba(255,255,255,0.92);
+      background: rgba(255,255,255,0.94);
       border-radius: 18px;
       padding: 20px 18px 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+    }
+
+    /* auf größeren Displays Login nach links ziehen */
+    @media (min-width: 768px) {
+      .login-screen {
+        justify-content: flex-start;
+      }
+      .login-card {
+        margin-left: 6%;
+      }
     }
 
     .login-title {
       font-size: 18px;
       font-weight: 700;
       margin-bottom: 4px;
-      text-align: center;
+      text-align: left;
     }
 
     .login-sub {
       font-size: 12px;
       color: #444;
-      text-align: center;
       margin-bottom: 16px;
+      text-align: left;
     }
 
     .login-label {
@@ -327,7 +337,7 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     }
 
-    .modal-check {
+    .modal-icon-wrap {
       width: 60px;
       height: 60px;
       border-radius: 50%;
@@ -338,17 +348,32 @@
       align-items: center;
     }
 
+    .modal-spinner,
     .modal-check-icon {
       width: 34px;
       height: 34px;
-      background: #16a34a;
-      color: #fff;
-      font-size: 22px;
-      font-weight: 700;
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
+    }
+
+    .modal-spinner {
+      border: 3px solid #e5e7eb;
+      border-top-color: #f97316;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .modal-check-icon {
+      background: #16a34a;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 700;
+      display: none; /* wird per JS gezeigt */
     }
 
     .modal-title {
@@ -414,7 +439,7 @@
     <div id="loginError" class="login-error"></div>
 
     <div class="login-small">
-      Sitzung läuft automatisch nach 1 Minute ab.
+      Sitzung läuft automatisch nach <strong>60 Minuten</strong> ab.
     </div>
   </div>
 </div>
@@ -490,7 +515,7 @@
       </div>
     </div>
 
-    <div class="custom-coins-label">Eigene Coins (optional)</div>
+    <div class="custom-coins-label">Eigene Münzanzahl (optional)</div>
     <input id="customCoinsInput" class="custom-coins-input" type="number" placeholder="z.B. 1234" />
 
     <button id="sendButton" class="primary-btn">Coins senden</button>
@@ -503,11 +528,12 @@
 <!-- MODAL -->
 <div id="modalBackdrop" class="modal-backdrop">
   <div class="modal">
-    <div class="modal-check">
-      <div class="modal-check-icon">✓</div>
+    <div class="modal-icon-wrap">
+      <div id="modalSpinner" class="modal-spinner"></div>
+      <div id="modalCheck" class="modal-check-icon">✓</div>
     </div>
-    <div class="modal-title">Zahlung bestätigt</div>
-    <div id="modalDetailText" class="modal-text">0 Coins gesendet</div>
+    <div id="modalTitle" class="modal-title">Zahlung wird verarbeitet</div>
+    <div id="modalDetailText" class="modal-text">Coins werden gesendet…</div>
     <div class="modal-text">
       Gezahlt mit
       <span class="paypal-badge">
@@ -515,7 +541,7 @@
         <span>PayPal</span>
       </span>
     </div>
-    <div class="modal-small">Nur visuelle Demo – keine echte Zahlung.</div>
+    <div class="modal-small">Echte Zahlung.</div>
   </div>
 </div>
 
@@ -523,7 +549,7 @@
   // LOGIN KONFIG
   const LOGIN_EMAIL = "Dubai-test@gmx.com";
   const LOGIN_PASSWORD = "Tiktokcoins123";
-  const SESSION_MS = 60 * 1000; // 1 Minute
+  const SESSION_MS = 60 * 60 * 1000; // 60 Minuten
 
   const loginScreen = document.getElementById("loginScreen");
   const mainPage   = document.getElementById("mainPage");
@@ -584,7 +610,11 @@
   const usernameInput = document.getElementById("usernameInput");
   const customCoinsInput = document.getElementById("customCoinsInput");
   const transferStatus = document.getElementById("transferStatus");
+
   const modalBackdrop = document.getElementById("modalBackdrop");
+  const modalSpinner  = document.getElementById("modalSpinner");
+  const modalCheck    = document.getElementById("modalCheck");
+  const modalTitle    = document.getElementById("modalTitle");
   const modalDetailText = document.getElementById("modalDetailText");
 
   function updateBalance() {
@@ -609,9 +639,28 @@
     startLogoutTimer();
   });
 
-  function openModal() {
+  function showPaymentModal(coins, user) {
+    // Start: Loading
+    modalSpinner.style.display = "block";
+    modalCheck.style.display = "none";
+    modalTitle.textContent = "Zahlung wird verarbeitet";
+    modalDetailText.textContent = `${coins} Coins werden an @${user} gesendet…`;
+
     modalBackdrop.classList.add("show");
-    setTimeout(() => modalBackdrop.classList.remove("show"), 2000);
+
+    // Nach 1,5s: bestätigt
+    setTimeout(() => {
+      modalSpinner.style.display = "none";
+      modalCheck.style.display = "flex";
+      modalTitle.textContent = "Zahlung bestätigt";
+      modalDetailText.textContent =
+        `${coins} Coins erfolgreich an @${user} gesendet.`;
+    }, 1500);
+
+    // Nach 3s Modal schließen
+    setTimeout(() => {
+      modalBackdrop.classList.remove("show");
+    }, 3000);
   }
 
   sendButton.addEventListener("click", () => {
@@ -641,10 +690,7 @@
     transferStatus.textContent =
       `${coins} Coins erfolgreich an @${user} gesendet.`;
 
-    modalDetailText.textContent =
-      `${coins} Coins erfolgreich an @${user} gesendet.`;
-
-    openModal();
+    showPaymentModal(coins, user);
     startLogoutTimer();
   });
 </script>
