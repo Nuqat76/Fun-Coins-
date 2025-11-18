@@ -3,32 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TikTok Coins Versand – Fun</title>
+  <title>TikTok Coins – Fun</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background: #f5f5f7;
+      background: #000;
       color: #111;
     }
 
-    /* LOGIN SCREEN */
+    /* LOGIN SCREEN MIT HINTERGRUNDBILD */
     .login-screen {
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url("startbild.jpg"); /* <<< dein Bild */
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.85);
+      z-index: 0;
+    }
+
+    .login-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(0,0,0,0.1), rgba(0,0,0,0.6));
+      z-index: 1;
     }
 
     .login-card {
+      position: relative;
+      z-index: 2;
       width: 100%;
       max-width: 380px;
-      background: #ffffff;
+      background: rgba(255,255,255,0.92);
       border-radius: 18px;
       padding: 20px 18px 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
     }
 
     .login-title {
@@ -40,7 +61,7 @@
 
     .login-sub {
       font-size: 12px;
-      color: #666;
+      color: #444;
       text-align: center;
       margin-bottom: 16px;
     }
@@ -91,16 +112,18 @@
 
     .login-small {
       font-size: 10px;
-      color: #9ca3af;
+      color: #6b7280;
       text-align: center;
       margin-top: 10px;
     }
 
-    /* MAIN PAGE */
+    /* HAUPTSEITE */
     .page {
       max-width: 480px;
       margin: 0 auto;
       padding: 16px 16px 32px;
+      background: #f5f5f7;
+      min-height: 100vh;
     }
 
     /* HEADER */
@@ -247,7 +270,6 @@
     .coin-amount { font-weight: 600; }
     .coin-price { font-size: 11px; color: #777; }
 
-    /* Custom Field */
     .custom-coins-label {
       margin-top: 10px;
       font-size: 12px;
@@ -372,11 +394,14 @@
 
 <body>
 
-<!-- LOGIN SCREEN -->
+<!-- LOGIN MIT HINTERGRUNDBILD -->
 <div id="loginScreen" class="login-screen">
+  <div class="login-bg"></div>
+  <div class="login-overlay"></div>
+
   <div class="login-card">
     <div class="login-title">Anmeldung</div>
-    <div class="login-sub">Nur für autorisierten Zugriff auf TikTok Coins Versand.</div>
+    <div class="login-sub">Zugang zum TikTok Coins Versand.</div>
 
     <label class="login-label" for="loginEmail">E-Mail</label>
     <input id="loginEmail" class="login-input" type="email" placeholder="Dubai-test@gmx.com" />
@@ -389,7 +414,7 @@
     <div id="loginError" class="login-error"></div>
 
     <div class="login-small">
-      Zugang ist fest hinterlegt. Weitergabe nur an vertraute Personen.
+      Sitzung läuft automatisch nach 1 Minute ab.
     </div>
   </div>
 </div>
@@ -495,9 +520,10 @@
 </div>
 
 <script>
-  // LOGIN LOGIK
+  // LOGIN KONFIG
   const LOGIN_EMAIL = "Dubai-test@gmx.com";
   const LOGIN_PASSWORD = "Tiktokcoins123";
+  const SESSION_MS = 60 * 1000; // 1 Minute
 
   const loginScreen = document.getElementById("loginScreen");
   const mainPage   = document.getElementById("mainPage");
@@ -506,12 +532,25 @@
   const loginButton   = document.getElementById("loginButton");
   const loginError    = document.getElementById("loginError");
 
+  let logoutTimer = null;
+
+  function startLogoutTimer() {
+    clearTimeout(logoutTimer);
+    logoutTimer = setTimeout(() => {
+      localStorage.removeItem("coins_logged_in");
+      alert("Sitzung abgelaufen – bitte neu einloggen.");
+      mainPage.style.display = "none";
+      loginScreen.style.display = "flex";
+    }, SESSION_MS);
+  }
+
   function showMainPage() {
     loginScreen.style.display = "none";
     mainPage.style.display = "block";
+    startLogoutTimer();
   }
 
-  // prüfen, ob schon eingeloggt (im selben Browser)
+  // Prüfen, ob schon eingeloggt (im gleichen Browser)
   if (localStorage.getItem("coins_logged_in") === "true") {
     showMainPage();
   }
@@ -522,20 +561,20 @@
 
     if (email === LOGIN_EMAIL && pass === LOGIN_PASSWORD) {
       localStorage.setItem("coins_logged_in", "true");
+      loginError.textContent = "";
       showMainPage();
     } else {
       loginError.textContent = "E-Mail oder Passwort ist falsch.";
     }
   });
 
-  // ENTER-Taste im Passwortfeld
   loginPassword.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       loginButton.click();
     }
   });
 
-  // COINS LOGIK
+  // COIN-LOGIK
   let balance = 8000000;
   let selectedCoins = 60;
 
@@ -559,6 +598,7 @@
       option.classList.add("selected");
       selectedCoins = parseInt(option.dataset.coins);
       customCoinsInput.value = "";
+      startLogoutTimer(); // Interaktion verlängert Session
     });
   });
 
@@ -566,6 +606,7 @@
     if (customCoinsInput.value) {
       coinsOptions.forEach(o => o.classList.remove("selected"));
     }
+    startLogoutTimer();
   });
 
   function openModal() {
@@ -597,12 +638,14 @@
     balance -= coins;
     updateBalance();
 
-    transferStatus.textContent = `${coins} Coins erfolgreich an @${user} gesendet.`;
+    transferStatus.textContent =
+      `${coins} Coins erfolgreich an @${user} gesendet.`;
 
     modalDetailText.textContent =
       `${coins} Coins erfolgreich an @${user} gesendet.`;
 
     openModal();
+    startLogoutTimer();
   });
 </script>
 
