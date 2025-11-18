@@ -393,14 +393,31 @@
       margin-bottom: 4px;
     }
 
-    .modal-payline span.method {
-      font-weight: 700;
-      color: #2563eb;
+    /* kleines PayPal-Logo */
+    .paypal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 4px;
     }
 
-    .modal-payline span.card {
-      font-family: monospace;
-      letter-spacing: 1px;
+    .paypal-logo {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      background: linear-gradient(135deg, #003087, #009cde);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .paypal-text {
+      font-size: 11px;
+      font-weight: 600;
+      color: #111827;
     }
 
     .modal-close-btn {
@@ -563,8 +580,7 @@
         0 Münzen erfolgreich gesendet.
       </div>
       <div class="modal-payline" id="modalPayLine">
-        Bezahlt mit <span class="method">VISA</span>
-        <span class="card">xxxxxx1708</span>
+        <!-- wird per JS gesetzt -->
       </div>
     </div>
   </div>
@@ -573,7 +589,7 @@
     let balance = 8000000;
     let selectedCoins = 60; // Standard-Paket
     let timerInterval = null;
-    let autoCloseTimeout = null; // für automatisches Schließen
+    let autoCloseTimeout = null;
 
     const balanceSpan = document.getElementById("balanceValue");
     const coinsOptions = document.querySelectorAll(".coin-option");
@@ -602,12 +618,11 @@
         coinsOptions.forEach((o) => o.classList.remove("selected"));
         option.classList.add("selected");
         selectedCoins = parseInt(option.dataset.coins, 10);
-        // wenn Paket gewählt wird, Custom-Feld leeren
         customCoinsInput.value = "";
       });
     });
 
-    // Wenn Custom Coins eingegeben werden, Paket-Auswahl deaktivieren
+    // Custom Coins
     customCoinsInput.addEventListener("input", () => {
       if (customCoinsInput.value && parseInt(customCoinsInput.value, 10) > 0) {
         coinsOptions.forEach((o) => o.classList.remove("selected"));
@@ -620,7 +635,7 @@
       if (timerInterval) {
         clearInterval(timerInterval);
       }
-      let remaining = 4 * 60 + 59; // 04:59
+      let remaining = 4 * 60 + 59;
 
       function update() {
         const min = Math.floor(remaining / 60)
@@ -645,21 +660,23 @@
 
       modalDetailText.textContent = `${coinsText} Münzen erfolgreich an ${usernameText} gesendet.`;
 
-      // Kartentext: VISA xxxxxx1708 (ohne weißen Kasten)
+      // PayPal-Zeile (kleines Logo + Text)
       modalPayLine.innerHTML =
-        'Bezahlt mit <span class="method">VISA</span> <span class="card">xxxxxx1708</span>';
+        'Gezahlt mit <span class="paypal-badge">' +
+        '<span class="paypal-logo">P</span>' +
+        '<span class="paypal-text">PayPal</span>' +
+        "</span>";
 
       startTimer();
       modalBackdrop.classList.add("show");
 
-      // alten Auto-Close-Timeout löschen
       if (autoCloseTimeout) {
         clearTimeout(autoCloseTimeout);
       }
-      // Kasten nach 5 Sekunden automatisch schließen
+      // Kasten nach 2 Sekunden automatisch schließen
       autoCloseTimeout = setTimeout(() => {
         closeModal();
-      }, 5000);
+      }, 2000);
     }
 
     function closeModal() {
@@ -700,7 +717,6 @@
         return;
       }
 
-      // Coins-Betrag bestimmen: erst Custom, sonst Paket
       const customValue = parseInt(customCoinsInput.value, 10);
       let coinsToSend = 0;
 
@@ -720,21 +736,15 @@
         return;
       }
 
-      // Guthaben verringern
       balance -= coinsToSend;
       if (balance < 0) balance = 0;
       updateBalanceDisplay();
 
-      // Status unten (Ladeanimation + Pfeil)
       showTransferStatus(rawUsername, coinsToSend);
-
-      // Modal anzeigen (Zahlung bestätigt + Timer + Visa-Text)
       openModal(rawUsername, coinsToSend);
-
-      // Button bleibt aktiv -> man kann direkt weiter senden.
     });
 
-    // Initiale Anzeige
+    // Start
     updateBalanceDisplay();
   </script>
 </body>
