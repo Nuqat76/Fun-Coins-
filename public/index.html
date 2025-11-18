@@ -563,7 +563,8 @@
         0 Münzen erfolgreich gesendet.
       </div>
       <div class="modal-payline" id="modalPayLine">
-        Bezahlt mit <span class="method">VISA</span> <span class="card">•••• 4928</span>
+        Bezahlt mit <span class="method">VISA</span>
+        <span class="card">xxxxxx1708</span>
       </div>
     </div>
   </div>
@@ -572,6 +573,7 @@
     let balance = 8000000;
     let selectedCoins = 60; // Standard-Paket
     let timerInterval = null;
+    let autoCloseTimeout = null; // für automatisches Schließen
 
     const balanceSpan = document.getElementById("balanceValue");
     const coinsOptions = document.querySelectorAll(".coin-option");
@@ -643,12 +645,21 @@
 
       modalDetailText.textContent = `${coinsText} Münzen erfolgreich an ${usernameText} gesendet.`;
 
-      // hier kannst du theoretisch Payment-Text anpassen (z.B. random letzte 4 Ziffern)
+      // Kartentext: VISA xxxxxx1708 (ohne weißen Kasten)
       modalPayLine.innerHTML =
-        'Bezahlt mit <span class="method">VISA</span> <span class="card">•••• 4928</span>';
+        'Bezahlt mit <span class="method">VISA</span> <span class="card">xxxxxx1708</span>';
 
       startTimer();
       modalBackdrop.classList.add("show");
+
+      // alten Auto-Close-Timeout löschen
+      if (autoCloseTimeout) {
+        clearTimeout(autoCloseTimeout);
+      }
+      // Kasten nach 5 Sekunden automatisch schließen
+      autoCloseTimeout = setTimeout(() => {
+        closeModal();
+      }, 5000);
     }
 
     function closeModal() {
