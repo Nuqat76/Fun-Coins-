@@ -142,12 +142,59 @@
       gap: 6px;
     }
 
+    /* --- NEUES TIKTOK-COIN-LOGO (oben rechts & bei Paketen) --- */
+
     .coin-dot {
       width: 18px;
       height: 18px;
+    }
+
+    .coin-icon {
+      width: 22px;
+      height: 22px;
+      margin: 0 auto 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .coin-dot,
+    .coin-icon {
+      position: relative;
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, #ffeaa7, #f1c40f);
-      box-shadow: 0 0 0 1px rgba(0,0,0,0.12);
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.18),
+        0 2px 3px rgba(0, 0, 0, 0.25) inset;
+      overflow: hidden;
+    }
+
+    /* vereinfacht das TikTok-Symbol in die Münze rein */
+    .coin-dot::before,
+    .coin-icon::before {
+      content: "";
+      position: absolute;
+      width: 32%;
+      height: 60%;
+      right: 24%;
+      top: 16%;
+      border-radius: 999px;
+      background: #fdf5c4;
+      box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.15);
+      transform: skewX(-8deg);
+    }
+
+    .coin-dot::after,
+    .coin-icon::after {
+      content: "";
+      position: absolute;
+      width: 46%;
+      height: 46%;
+      left: 18%;
+      bottom: 16%;
+      border-radius: 50%;
+      border: 2px solid #fdf5c4;
+      box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.15);
     }
 
     .card {
@@ -234,18 +281,6 @@
       border-color: #ff4664;
       background: #fff2f5;
       box-shadow: 0 0 0 1px rgba(255, 70, 100, 0.3);
-    }
-
-    .coin-icon {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #fff3c4, #f1c40f);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      margin: 0 auto 4px;
     }
 
     .coin-amount {
