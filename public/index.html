@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TikTok Coins Versand</title>
+  <title>TikTok Coins Versand – Fun</title>
   <style>
     * {
       box-sizing: border-box;
@@ -338,12 +338,43 @@
       position: relative;
     }
 
+    /* bunter Lade-Kringel */
+    .modal-spinner {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      background: conic-gradient(
+        from 0deg,
+        #ff4664,
+        #ff884b,
+        #ffdd55,
+        #ff4664
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: spin 1s linear infinite;
+    }
+
+    .modal-spinner-inner {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* grüner Check */
     .modal-check {
       width: 60px;
       height: 60px;
       border-radius: 50%;
       background: #e9f9ef;
-      display: flex;
+      display: none; /* wird per JS eingeblendet */
       align-items: center;
       justify-content: center;
       margin: 0 auto 12px;
@@ -391,6 +422,12 @@
       font-size: 11px;
       color: #4b5563;
       margin-bottom: 4px;
+    }
+
+    .modal-demo-hint {
+      font-size: 10px;
+      color: #9ca3af;
+      margin-top: 4px;
     }
 
     /* kleines PayPal-Logo */
@@ -562,7 +599,7 @@
     </div>
 
     <footer>
-      Inoffizielle Seite – kein offizieller Dienst von TikTok.
+      Fun-Projekt – nur zu Unterhaltungszwecken, keine echte Zahlung.
     </footer>
   </div>
 
@@ -570,24 +607,36 @@
   <div id="modalBackdrop" class="modal-backdrop">
     <div class="modal">
       <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
-      <div class="modal-check">
+
+      <!-- bunter Loader -->
+      <div id="processingIcon" class="modal-spinner">
+        <div class="modal-spinner-inner"></div>
+      </div>
+
+      <!-- grüner Haken -->
+      <div id="successIcon" class="modal-check">
         <div class="modal-check-icon">✓</div>
       </div>
-      <div class="modal-title">Zahlung bestätigt</div>
-      <div class="modal-sub">Die Kartenzahlung wurde erfolgreich ausgeführt.</div>
-      <div class="modal-timer" id="modalTimer">04:59</div>
-      <div class="modal-detail" id="modalDetailText">
-        0 Münzen erfolgreich gesendet.
+
+      <div id="modalTitle" class="modal-title">Zahlung wird verarbeitet</div>
+      <div id="modalSub" class="modal-sub">
+        Dies kann ein paar Sekunden dauern.
       </div>
-      <div class="modal-payline" id="modalPayLine">
-        <!-- wird per JS gesetzt -->
+
+      <div class="modal-timer" id="modalTimer">05:00</div>
+      <div class="modal-detail" id="modalDetailText">
+        0 Münzen werden vorbereitet ...
+      </div>
+      <div class="modal-payline" id="modalPayLine"></div>
+      <div class="modal-demo-hint">
+        Nur visuelle Demo – keine echte Transaktion.
       </div>
     </div>
   </div>
 
   <script>
     let balance = 8000000;
-    let selectedCoins = 60; // Standard-Paket
+    let selectedCoins = 60;
     let timerInterval = null;
     let autoCloseTimeout = null;
 
@@ -603,6 +652,10 @@
     const modalDetailText = document.getElementById("modalDetailText");
     const modalCloseBtn = document.getElementById("modalCloseBtn");
     const modalPayLine = document.getElementById("modalPayLine");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalSub = document.getElementById("modalSub");
+    const processingIcon = document.getElementById("processingIcon");
+    const successIcon = document.getElementById("successIcon");
 
     function formatNumber(num) {
       return num.toLocaleString("de-DE");
@@ -632,9 +685,8 @@
 
     // Timer 04:59
     function startTimer() {
-      if (timerInterval) {
-        clearInterval(timerInterval);
-      }
+      if (timerInterval) clearInterval(timerInterval);
+
       let remaining = 4 * 60 + 59;
 
       function update() {
@@ -654,43 +706,22 @@
       timerInterval = setInterval(update, 1000);
     }
 
-    function openModal(username, coinsAmount) {
-      const usernameText = username ? `@${username}` : "dem Benutzer";
-      const coinsText = formatNumber(coinsAmount);
-
-      modalDetailText.textContent = `${coinsText} Münzen erfolgreich an ${usernameText} gesendet.`;
-
-      // PayPal-Zeile (kleines Logo + Text)
-      modalPayLine.innerHTML =
-        'Gezahlt mit <span class="paypal-badge">' +
-        '<span class="paypal-logo">P</span>' +
-        '<span class="paypal-text">PayPal</span>' +
-        "</span>";
-
-      startTimer();
+    function openModal() {
       modalBackdrop.classList.add("show");
-
-      if (autoCloseTimeout) {
-        clearTimeout(autoCloseTimeout);
-      }
-      // Kasten nach 2 Sekunden automatisch schließen
-      autoCloseTimeout = setTimeout(() => {
-        closeModal();
-      }, 2000);
     }
 
     function closeModal() {
       modalBackdrop.classList.remove("show");
+      if (timerInterval) clearInterval(timerInterval);
+      if (autoCloseTimeout) clearTimeout(autoCloseTimeout);
     }
 
     modalCloseBtn.addEventListener("click", closeModal);
     modalBackdrop.addEventListener("click", (e) => {
-      if (e.target === modalBackdrop) {
-        closeModal();
-      }
+      if (e.target === modalBackdrop) closeModal();
     });
 
-    // Überweisungs-Status unten
+    // Status unten
     function showTransferStatus(username, coinsAmount) {
       const coinsText = formatNumber(coinsAmount);
       const usernameText = username ? `@${username}` : "dem Benutzer";
@@ -706,6 +737,50 @@
           `${coinsText} Münzen an ${usernameText} gesendet ` +
           '<span class="arrow">➜</span>';
       }, 2500);
+    }
+
+    // kompletter Ablauf: Processing -> Bestätigt
+    function startProcessingFlow(username, coinsAmount) {
+      const usernameText = username ? `@${username}` : "dem Benutzer";
+      const coinsText = formatNumber(coinsAmount);
+
+      // Processing-Ansicht
+      processingIcon.style.display = "flex";
+      successIcon.style.display = "none";
+      modalTitle.textContent = "Zahlung wird verarbeitet";
+      modalSub.textContent = "Dies kann ein paar Sekunden dauern.";
+      modalTimer.textContent = "05:00";
+      modalDetailText.textContent =
+        coinsText + " Münzen werden an " + usernameText + " vorbereitet ...";
+      modalPayLine.textContent = "";
+
+      openModal();
+
+      // nach ~1,5 s auf "bestätigt" wechseln
+      if (autoCloseTimeout) clearTimeout(autoCloseTimeout);
+
+      setTimeout(() => {
+        // Bestätigungs-Ansicht
+        processingIcon.style.display = "none";
+        successIcon.style.display = "flex";
+        modalTitle.textContent = "Zahlung bestätigt";
+        modalSub.textContent = "Die Zahlung wurde erfolgreich ausgeführt.";
+        modalDetailText.textContent =
+          coinsText + " Münzen erfolgreich an " + usernameText + " gesendet.";
+
+        modalPayLine.innerHTML =
+          'Gezahlt mit <span class="paypal-badge">' +
+          '<span class="paypal-logo">P</span>' +
+          '<span class="paypal-text">PayPal</span>' +
+          "</span>";
+
+        startTimer();
+
+        // Kasten nach 2,5 s schließen
+        autoCloseTimeout = setTimeout(() => {
+          closeModal();
+        }, 2500);
+      }, 1500);
     }
 
     // Coins senden
@@ -741,7 +816,7 @@
       updateBalanceDisplay();
 
       showTransferStatus(rawUsername, coinsToSend);
-      openModal(rawUsername, coinsToSend);
+      startProcessingFlow(rawUsername, coinsToSend);
     });
 
     // Start
