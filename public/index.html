@@ -71,7 +71,7 @@
       box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
     }
 
-    /* Hinweis (nur Budget-Hinweis, kein Demo-Text) */
+    /* Hinweis */
 
     .notice {
       background: #f1f2f5;
@@ -159,7 +159,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
 
     .coin-option {
@@ -210,6 +210,43 @@
       color: #777;
     }
 
+    /* Custom Coins */
+
+    .custom-coins-label {
+      font-size: 12px;
+      margin-top: 4px;
+      margin-bottom: 4px;
+      color: #555;
+    }
+
+    .custom-coins-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .custom-coins-input {
+      flex: 1;
+      border-radius: 10px;
+      border: 1px solid #e3e3e7;
+      padding: 8px 10px;
+      font-size: 13px;
+      outline: none;
+      background: #fafafa;
+    }
+
+    .custom-coins-input:focus {
+      border-color: #ff4664;
+      box-shadow: 0 0 0 1px rgba(255, 70, 100, 0.15);
+      background: #fff;
+    }
+
+    .custom-coins-hint {
+      font-size: 11px;
+      color: #888;
+    }
+
     /* Button */
 
     .primary-btn {
@@ -240,6 +277,31 @@
       height: 7px;
       border-radius: 50%;
       background: #fff;
+    }
+
+    /* Transfer-Status unten */
+
+    .transfer-status {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #666;
+      min-height: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .transfer-status .arrow {
+      font-size: 14px;
+    }
+
+    .transfer-status.loading .arrow {
+      animation: arrow-move 0.8s infinite alternate;
+    }
+
+    @keyframes arrow-move {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(4px); }
     }
 
     footer {
@@ -322,7 +384,23 @@
     .modal-detail {
       font-size: 13px;
       color: #555;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
+    }
+
+    .modal-payline {
+      font-size: 11px;
+      color: #4b5563;
+      margin-bottom: 4px;
+    }
+
+    .modal-payline span.method {
+      font-weight: 700;
+      color: #2563eb;
+    }
+
+    .modal-payline span.card {
+      font-family: monospace;
+      letter-spacing: 1px;
     }
 
     .modal-close-btn {
@@ -358,10 +436,12 @@
       </div>
     </header>
 
+    <!-- Hinweis -->
+    <div class="notice">
+      <strong>Achtung:</strong> Geschenke verschicken über TikTok kann süchtig
+      machen – bitte achtet auf euer Budget.
+    </div>
 
-
-
-    
     <!-- Karte -->
     <div class="card">
       <div class="card-title">Benutzername</div>
@@ -440,14 +520,32 @@
         </div>
       </div>
 
+      <!-- Eigene Coins eingeben -->
+      <div class="custom-coins-label">Eigene Münzanzahl (optional)</div>
+      <div class="custom-coins-row">
+        <input
+          id="customCoinsInput"
+          type="number"
+          class="custom-coins-input"
+          placeholder="z.B. 1234"
+          min="1"
+        />
+      </div>
+      <div class="custom-coins-hint">
+        Wenn du hier etwas eingibst, wird diese Anzahl verwendet – statt eines Pakets.
+      </div>
+
       <button id="sendButton" class="primary-btn">
         <span class="primary-btn-dot"></span>
         <span>Coins senden</span>
       </button>
+
+      <!-- Überweisungs-Status unten -->
+      <div class="transfer-status" id="transferStatus"></div>
     </div>
 
     <footer>
-      
+      Inoffizielle Seite – kein offizieller Dienst von TikTok.
     </footer>
   </div>
 
@@ -459,28 +557,34 @@
         <div class="modal-check-icon">✓</div>
       </div>
       <div class="modal-title">Zahlung bestätigt</div>
-      <div class="modal-sub">Die Münzen werden gleich gutgeschrieben.</div>
+      <div class="modal-sub">Die Kartenzahlung wurde erfolgreich ausgeführt.</div>
       <div class="modal-timer" id="modalTimer">04:59</div>
       <div class="modal-detail" id="modalDetailText">
         0 Münzen erfolgreich gesendet.
+      </div>
+      <div class="modal-payline" id="modalPayLine">
+        Bezahlt mit <span class="method">VISA</span> <span class="card">•••• 4928</span>
       </div>
     </div>
   </div>
 
   <script>
     let balance = 8000000;
-    let selectedCoins = 60; // Standard: 60 Coins
+    let selectedCoins = 60; // Standard-Paket
     let timerInterval = null;
 
     const balanceSpan = document.getElementById("balanceValue");
     const coinsOptions = document.querySelectorAll(".coin-option");
     const sendButton = document.getElementById("sendButton");
     const usernameInput = document.getElementById("usernameInput");
+    const customCoinsInput = document.getElementById("customCoinsInput");
+    const transferStatus = document.getElementById("transferStatus");
 
     const modalBackdrop = document.getElementById("modalBackdrop");
     const modalTimer = document.getElementById("modalTimer");
     const modalDetailText = document.getElementById("modalDetailText");
     const modalCloseBtn = document.getElementById("modalCloseBtn");
+    const modalPayLine = document.getElementById("modalPayLine");
 
     function formatNumber(num) {
       return num.toLocaleString("de-DE");
@@ -496,7 +600,17 @@
         coinsOptions.forEach((o) => o.classList.remove("selected"));
         option.classList.add("selected");
         selectedCoins = parseInt(option.dataset.coins, 10);
+        // wenn Paket gewählt wird, Custom-Feld leeren
+        customCoinsInput.value = "";
       });
+    });
+
+    // Wenn Custom Coins eingegeben werden, Paket-Auswahl deaktivieren
+    customCoinsInput.addEventListener("input", () => {
+      if (customCoinsInput.value && parseInt(customCoinsInput.value, 10) > 0) {
+        coinsOptions.forEach((o) => o.classList.remove("selected"));
+        selectedCoins = 0;
+      }
     });
 
     // Timer 04:59
@@ -523,11 +637,16 @@
       timerInterval = setInterval(update, 1000);
     }
 
-    function openModal(username) {
+    function openModal(username, coinsAmount) {
       const usernameText = username ? `@${username}` : "dem Benutzer";
-      const coinsText = formatNumber(selectedCoins);
+      const coinsText = formatNumber(coinsAmount);
 
       modalDetailText.textContent = `${coinsText} Münzen erfolgreich an ${usernameText} gesendet.`;
+
+      // hier kannst du theoretisch Payment-Text anpassen (z.B. random letzte 4 Ziffern)
+      modalPayLine.innerHTML =
+        'Bezahlt mit <span class="method">VISA</span> <span class="card">•••• 4928</span>';
+
       startTimer();
       modalBackdrop.classList.add("show");
     }
@@ -543,6 +662,24 @@
       }
     });
 
+    // Überweisungs-Status unten
+    function showTransferStatus(username, coinsAmount) {
+      const coinsText = formatNumber(coinsAmount);
+      const usernameText = username ? `@${username}` : "dem Benutzer";
+
+      transferStatus.classList.add("loading");
+      transferStatus.innerHTML =
+        '<span class="arrow">➜</span>' +
+        `${coinsText} Münzen an ${usernameText} werden gesendet...`;
+
+      setTimeout(() => {
+        transferStatus.classList.remove("loading");
+        transferStatus.innerHTML =
+          `${coinsText} Münzen an ${usernameText} gesendet ` +
+          '<span class="arrow">➜</span>';
+      }, 2500);
+    }
+
     // Coins senden
     sendButton.addEventListener("click", () => {
       const rawUsername = usernameInput.value.trim();
@@ -552,14 +689,38 @@
         return;
       }
 
-      // Münzguthaben verringern
-      balance -= selectedCoins;
+      // Coins-Betrag bestimmen: erst Custom, sonst Paket
+      const customValue = parseInt(customCoinsInput.value, 10);
+      let coinsToSend = 0;
+
+      if (!isNaN(customValue) && customValue > 0) {
+        coinsToSend = customValue;
+      } else {
+        coinsToSend = selectedCoins;
+      }
+
+      if (!coinsToSend || coinsToSend <= 0) {
+        alert("Bitte wähle ein Münzpaket oder gib eine Anzahl ein.");
+        return;
+      }
+
+      if (coinsToSend > balance) {
+        alert("Nicht genug Münzguthaben für diesen Betrag.");
+        return;
+      }
+
+      // Guthaben verringern
+      balance -= coinsToSend;
       if (balance < 0) balance = 0;
       updateBalanceDisplay();
 
-      // Modal anzeigen
-      openModal(rawUsername);
-      // WICHTIG: Button bleibt aktiv -> man kann direkt weiter senden.
+      // Status unten (Ladeanimation + Pfeil)
+      showTransferStatus(rawUsername, coinsToSend);
+
+      // Modal anzeigen (Zahlung bestätigt + Timer + Visa-Text)
+      openModal(rawUsername, coinsToSend);
+
+      // Button bleibt aktiv -> man kann direkt weiter senden.
     });
 
     // Initiale Anzeige
